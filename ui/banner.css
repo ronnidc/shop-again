@@ -1,0 +1,126 @@
+/* The banner sits on top of a shop's own page, so it resets everything it
+   inherits and brings its own colors instead of following the page. */
+:host {
+  all: initial;
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 2147483647;
+  display: block;
+  /* The host spans the page. Only the bar and the tab take clicks. */
+  pointer-events: none;
+}
+
+.root {
+  --good: #18794e;
+  --bad: #b42318;
+  --mixed: #9a6700;
+  --on-color: #fff;
+
+  color: var(--on-color);
+  font: 14px/1.4 system-ui, sans-serif;
+}
+
+.root[data-standing='good'] {
+  --color: var(--good);
+}
+
+.root[data-standing='bad'] {
+  --color: var(--bad);
+}
+
+.root[data-standing='mixed'] {
+  --color: var(--mixed);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 10px;
+  padding-inline: 16px;
+  background: var(--color);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+  pointer-events: auto;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.note {
+  overflow: hidden;
+  max-inline-size: 48ch;
+  font-style: italic;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brand {
+  font-size: 12px;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.icon {
+  flex: none;
+  inline-size: 20px;
+  block-size: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+button {
+  all: unset;
+  display: grid;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--on-color);
+  outline-offset: 2px;
+}
+
+.close {
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.close:hover {
+  background: rgb(255 255 255 / 0.18);
+}
+
+/* Collapsed, the shop keeps a thin line in the verdict's color and a tab that
+   brings the bar back. */
+.root[data-state='collapsed']::before {
+  content: '';
+  display: block;
+  block-size: 3px;
+  background: var(--color);
+}
+
+.tab {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 24px;
+  padding-block: 5px 6px;
+  padding-inline: 10px;
+  border-end-start-radius: 8px;
+  border-end-end-radius: 8px;
+  background: var(--color);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+}
+
+.root[data-state='collapsed'] .bar,
+.root[data-state='open'] .tab {
+  display: none;
+}

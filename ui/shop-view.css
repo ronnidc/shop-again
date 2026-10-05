@@ -1,0 +1,122 @@
+.shop-view,
+.entry-list,
+.entry-form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.shop-head {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.shop-head h2 {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.entries {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.entry {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.entry-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.note {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.entry-form legend,
+.field span {
+  margin-block-end: var(--space-1);
+  font-weight: 600;
+}
+
+.field {
+  display: grid;
+}
+
+.field input {
+  justify-self: start;
+}
+
+.verdicts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.verdict {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* The radio buttons and checkboxes stay in the page for the keyboard and for
+   screen readers. Their labels carry the look. */
+.verdict input,
+label.chip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.verdict:has(input:focus-visible),
+label.chip:has(input:focus-visible) {
+  outline: 2px solid Highlight;
+  outline-offset: 2px;
+}
+
+.verdict[data-standing='good']:has(input:checked) {
+  border-color: var(--good);
+  background: color-mix(in srgb, var(--good) 14%, Canvas);
+  color: var(--good);
+}
+
+.verdict[data-standing='bad']:has(input:checked) {
+  border-color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 14%, Canvas);
+  color: var(--bad);
+}
+
+label.chip {
+  position: relative;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+label.chip:has(input:checked) {
+  border-color: CanvasText;
+  background: CanvasText;
+  color: Canvas;
+}

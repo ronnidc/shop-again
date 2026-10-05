@@ -1,27 +1,36 @@
-/* System colors and the system font let the popup follow each browser's own
-   light and dark look without a design per browser. */
-:root {
-  color-scheme: light dark;
-  --space: 12px;
-  --text-muted: color-mix(in srgb, CanvasText 65%, Canvas);
-}
-
 body {
+  display: grid;
+  gap: var(--space-4);
   inline-size: 360px;
-  margin: 0;
-  padding: var(--space);
-  background: Canvas;
-  color: CanvasText;
-  font: 14px/1.4 system-ui, sans-serif;
+  padding: var(--space-4);
 }
 
-h1 {
-  margin-block: 0 4px;
-  font-size: 16px;
-  overflow-wrap: anywhere;
+.standalone body {
+  inline-size: auto;
 }
 
-p {
-  margin: 0;
-  color: var(--text-muted);
+footer {
+  display: grid;
+  gap: var(--space-2);
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--border);
+}
+
+footer .link {
+  justify-self: start;
+}
+
+.other-shop {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-2);
+}
+
+.other-shop label {
+  grid-column: 1 / -1;
+  font-weight: 600;
+}
+
+.other-shop input {
+  min-inline-size: 0;
 }

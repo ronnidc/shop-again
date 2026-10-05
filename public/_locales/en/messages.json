@@ -1,14 +1,81 @@
 {
-  "extName": {
-    "message": "Shop Again?"
-  },
+  "extName": { "message": "Shop Again?" },
   "extDescription": {
     "message": "Your own notes on web shops you have bought from, shown when you come back."
   },
+
+  "verdictGood": { "message": "Good" },
+  "verdictBad": { "message": "Bad" },
+  "standingMixed": { "message": "Mixed" },
+  "countGood": { "message": "$1 good" },
+  "countBad": { "message": "$1 bad" },
+
+  "tag_slow_delivery": { "message": "Slow delivery" },
+  "tag_wrong_stock": { "message": "Wrong stock status" },
+  "tag_bad_service": { "message": "Poor customer service" },
+  "tag_hard_return": { "message": "Difficult return" },
+  "tag_not_as_described": { "message": "Item not as described" },
+  "tag_unexpected_fees": { "message": "Unexpected fees" },
+  "tag_fast_delivery": { "message": "Fast delivery" },
+  "tag_stock_correct": { "message": "Stock status was right" },
+  "tag_good_service": { "message": "Good customer service" },
+  "tag_easy_return": { "message": "Easy return" },
+
   "popupNoShop": {
-    "message": "Open a web shop to add a note about it."
+    "message": "Open a web shop to add a note about it, or type its address below."
   },
-  "popupNoNotes": {
-    "message": "No notes about this shop yet."
-  }
+  "shopNoNotes": { "message": "No notes about this shop yet." },
+  "addExperience": { "message": "Add an experience" },
+  "formVerdictLegend": { "message": "How did it go?" },
+  "formTagsLegend": { "message": "What happened?" },
+  "formNoteLabel": { "message": "Note (optional)" },
+  "formDateLabel": { "message": "Date" },
+  "formVerdictMissing": { "message": "Choose good or bad first." },
+  "save": { "message": "Save" },
+  "cancel": { "message": "Cancel" },
+  "edit": { "message": "Edit" },
+  "delete": { "message": "Delete" },
+  "close": { "message": "Close" },
+  "confirmDelete": { "message": "Delete this note?" },
+  "saveFailed": {
+    "message": "The note could not be saved. The browser's sync storage may be full."
+  },
+  "bannerOff": { "message": "The banner is off for this shop on this computer." },
+  "bannerTurnOn": { "message": "Turn on" },
+  "otherShopLabel": { "message": "Another shop" },
+  "otherShopPlaceholder": { "message": "shop.com or a link" },
+  "otherShopOpen": { "message": "Open" },
+  "otherShopInvalid": { "message": "That does not look like a shop address." },
+  "allShops": { "message": "All shops" },
+
+  "bannerTitleBad": { "message": "You had a bad experience here" },
+  "bannerTitleGood": { "message": "You had a good experience here" },
+  "bannerTitleMixed": { "message": "You have had mixed experiences here" },
+  "bannerHide": { "message": "Hide" },
+  "bannerShow": { "message": "Show your notes about this shop" },
+
+  "menuNotePage": { "message": "Note about this shop" },
+  "menuNoteLink": { "message": "Note about the shop this link goes to" },
+
+  "optionsTagline": { "message": "Your own notes on web shops you have bought from." },
+  "searchLabel": { "message": "Search" },
+  "filterLabel": { "message": "Show" },
+  "filterAll": { "message": "All" },
+  "addShopLabel": { "message": "Add a shop" },
+  "noShops": {
+    "message": "No shops yet. Open a web shop and click the Shop Again? button in the toolbar to add your first note."
+  },
+  "noMatches": { "message": "No shops match." },
+  "bannerMissing": { "message": "Shops without a banner on this computer: $1" },
+  "bannerTurnOnAll": { "message": "Turn on for all" },
+  "settingsHeading": { "message": "Settings" },
+  "settingContextMenu": { "message": "Show Shop Again? in the right-click menu" },
+  "dataHeading": { "message": "Your data" },
+  "dataExplain": {
+    "message": "Your notes are kept in the browser's own sync storage and are never sent anywhere else."
+  },
+  "exportButton": { "message": "Export to a file" },
+  "importButton": { "message": "Import from a file" },
+  "importDone": { "message": "Import done. Notes added: $1" },
+  "importInvalid": { "message": "This is not a Shop Again? export file." }
 }

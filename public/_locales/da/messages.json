@@ -1,14 +1,81 @@
 {
-  "extName": {
-    "message": "Shop Again?"
-  },
+  "extName": { "message": "Shop Again?" },
   "extDescription": {
     "message": "Dine egne noter om webshops, du har handlet i, vist når du kommer tilbage."
   },
+
+  "verdictGood": { "message": "God" },
+  "verdictBad": { "message": "Dårlig" },
+  "standingMixed": { "message": "Blandet" },
+  "countGood": { "message": "$1 gode" },
+  "countBad": { "message": "$1 dårlige" },
+
+  "tag_slow_delivery": { "message": "Langsom levering" },
+  "tag_wrong_stock": { "message": "Forkert lagerstatus" },
+  "tag_bad_service": { "message": "Dårlig kundeservice" },
+  "tag_hard_return": { "message": "Besværlig retur" },
+  "tag_not_as_described": { "message": "Vare ikke som beskrevet" },
+  "tag_unexpected_fees": { "message": "Uventede gebyrer" },
+  "tag_fast_delivery": { "message": "Hurtig levering" },
+  "tag_stock_correct": { "message": "Lagerstatus passede" },
+  "tag_good_service": { "message": "God kundeservice" },
+  "tag_easy_return": { "message": "Nem retur" },
+
   "popupNoShop": {
-    "message": "Åbn en webshop for at skrive en note om den."
+    "message": "Åbn en webshop for at skrive en note om den, eller skriv dens adresse herunder."
   },
-  "popupNoNotes": {
-    "message": "Ingen noter om denne shop endnu."
-  }
+  "shopNoNotes": { "message": "Ingen noter om denne shop endnu." },
+  "addExperience": { "message": "Tilføj en oplevelse" },
+  "formVerdictLegend": { "message": "Hvordan gik det?" },
+  "formTagsLegend": { "message": "Hvad skete der?" },
+  "formNoteLabel": { "message": "Note (valgfri)" },
+  "formDateLabel": { "message": "Dato" },
+  "formVerdictMissing": { "message": "Vælg god eller dårlig først." },
+  "save": { "message": "Gem" },
+  "cancel": { "message": "Annuller" },
+  "edit": { "message": "Rediger" },
+  "delete": { "message": "Slet" },
+  "close": { "message": "Luk" },
+  "confirmDelete": { "message": "Slet denne note?" },
+  "saveFailed": {
+    "message": "Noten kunne ikke gemmes. Browserens synkroniserede lager er måske fyldt."
+  },
+  "bannerOff": { "message": "Banneret er slået fra for denne shop på denne computer." },
+  "bannerTurnOn": { "message": "Slå til" },
+  "otherShopLabel": { "message": "En anden shop" },
+  "otherShopPlaceholder": { "message": "shop.dk eller et link" },
+  "otherShopOpen": { "message": "Åbn" },
+  "otherShopInvalid": { "message": "Det ligner ikke en shop-adresse." },
+  "allShops": { "message": "Alle shops" },
+
+  "bannerTitleBad": { "message": "Du har haft en dårlig oplevelse her" },
+  "bannerTitleGood": { "message": "Du har haft en god oplevelse her" },
+  "bannerTitleMixed": { "message": "Du har haft blandede oplevelser her" },
+  "bannerHide": { "message": "Skjul" },
+  "bannerShow": { "message": "Vis dine noter om denne shop" },
+
+  "menuNotePage": { "message": "Skriv note om denne shop" },
+  "menuNoteLink": { "message": "Skriv note om shoppen, linket fører til" },
+
+  "optionsTagline": { "message": "Dine egne noter om webshops, du har handlet i." },
+  "searchLabel": { "message": "Søg" },
+  "filterLabel": { "message": "Vis" },
+  "filterAll": { "message": "Alle" },
+  "addShopLabel": { "message": "Tilføj en shop" },
+  "noShops": {
+    "message": "Ingen shops endnu. Åbn en webshop og klik på Shop Again?-knappen i værktøjslinjen for at skrive din første note."
+  },
+  "noMatches": { "message": "Ingen shops matcher." },
+  "bannerMissing": { "message": "Shops uden banner på denne computer: $1" },
+  "bannerTurnOnAll": { "message": "Slå til for alle" },
+  "settingsHeading": { "message": "Indstillinger" },
+  "settingContextMenu": { "message": "Vis Shop Again? i højreklik-menuen" },
+  "dataHeading": { "message": "Dine data" },
+  "dataExplain": {
+    "message": "Dine noter ligger i browserens eget synkroniserede lager og sendes aldrig andre steder hen."
+  },
+  "exportButton": { "message": "Eksportér til en fil" },
+  "importButton": { "message": "Importér fra en fil" },
+  "importDone": { "message": "Import færdig. Noter tilføjet: $1" },
+  "importInvalid": { "message": "Det er ikke en eksportfil fra Shop Again?." }
 }

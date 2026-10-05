@@ -1,0 +1,191 @@
+/* System colors and the system font let the extension's own pages follow each
+   browser's light and dark look without a design per browser. */
+:root {
+  color-scheme: light dark;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --radius: 8px;
+  --radius-pill: 999px;
+
+  --text-muted: color-mix(in srgb, CanvasText 62%, Canvas);
+  --border: color-mix(in srgb, CanvasText 18%, Canvas);
+  --surface: color-mix(in srgb, CanvasText 5%, Canvas);
+  --surface-hover: color-mix(in srgb, CanvasText 10%, Canvas);
+
+  --good: light-dark(#18794e, #5fd39c);
+  --bad: light-dark(#b42318, #ff8f85);
+  --mixed: light-dark(#8a5a00, #f2b84b);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Classes that set display would otherwise win over the hidden attribute. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background: Canvas;
+  color: CanvasText;
+  font: 14px/1.45 system-ui, sans-serif;
+}
+
+h1,
+h2,
+p,
+ul,
+fieldset,
+legend {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+fieldset {
+  min-inline-size: 0;
+  border: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--surface-hover);
+}
+
+button.primary {
+  border-color: CanvasText;
+  background: CanvasText;
+  color: Canvas;
+  font-weight: 600;
+}
+
+button.primary:hover {
+  background: color-mix(in srgb, CanvasText 85%, Canvas);
+}
+
+button.danger {
+  border-color: var(--bad);
+  background: var(--bad);
+  color: Canvas;
+  font-weight: 600;
+}
+
+button.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: LinkText;
+  text-decoration: underline;
+}
+
+input[type='text'],
+input[type='search'],
+input[type='date'],
+select,
+textarea {
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: Field;
+  color: FieldText;
+}
+
+textarea {
+  inline-size: 100%;
+  resize: vertical;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.error {
+  color: var(--bad);
+}
+
+.notice {
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  inline-size: 1px;
+  block-size: 1px;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.icon {
+  flex: none;
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.standing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 600;
+}
+
+.standing[data-standing='good'] {
+  color: var(--good);
+}
+
+.standing[data-standing='bad'] {
+  color: var(--bad);
+}
+
+.standing[data-standing='mixed'] {
+  color: var(--mixed);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.chip {
+  padding-block: 2px;
+  padding-inline: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+}

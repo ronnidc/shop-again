@@ -15,13 +15,19 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
+    "test": "vitest run",
     "lint:firefox": "web-ext lint --source-dir .output/firefox-mv3",
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
+    "happy-dom": "^20.14.5",
     "typescript": "^5.9.3",
     "vite": "^8.1.5",
+    "vitest": "^5.0.3",
     "web-ext": "^10.5.0",
     "wxt": "^0.21.3"
+  },
+  "dependencies": {
+    "tldts": "^7.4.16"
   }
 }
