@@ -28,6 +28,11 @@ export function formatDay(date: string): string {
   return formatDate(date, { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+/** Month 1 to 12 as "January" in the browser's language. */
+export function monthName(month: number): string {
+  return formatDate(`2000-${month}-1`, { month: 'long' });
+}
+
 function formatDate(date: string, options: Intl.DateTimeFormatOptions): string {
   const [year = 1970, month = 1, day = 1] = date.split('-').map(Number);
   const language = browser.i18n.getUILanguage();

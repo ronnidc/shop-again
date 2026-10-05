@@ -1,12 +1,21 @@
 body {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  /* Firefox makes the popup as wide as its content can get, so without a set
+     width it grows and shrinks with what the form shows. */
   inline-size: 360px;
+  /* A tall popup gets a scrollbar that takes its width from the page. The
+     body then gives way instead of overflowing sideways. */
+  max-inline-size: 100%;
   padding: var(--space-4);
 }
 
 .standalone body {
   inline-size: auto;
+}
+
+#drafts:empty {
+  display: none;
 }
 
 footer {
@@ -16,21 +25,24 @@ footer {
   border-block-start: 1px solid var(--border);
 }
 
-footer .link {
-  justify-self: start;
+.other-shop summary {
+  color: LinkText;
+  cursor: pointer;
 }
 
-.other-shop {
+.other-shop form {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: var(--space-1) var(--space-2);
-}
-
-.other-shop label {
-  grid-column: 1 / -1;
-  font-weight: 600;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
 }
 
 .other-shop input {
   min-inline-size: 0;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
 }

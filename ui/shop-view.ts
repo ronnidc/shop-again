@@ -2,24 +2,29 @@ import {
   byNewest,
   newEntryId,
   NOTE_MAX_LENGTH,
+  pickedDate,
   summarize,
   today,
   withEntry,
   withoutEntry,
+  type Draft,
   type Entry,
 } from '@/core/model';
 import { TAGS, tagsFor } from '@/core/tags';
-import { formatDay, t, tagLabel } from '@/platform/i18n';
+import { formatDay, monthName, t, tagLabel } from '@/platform/i18n';
 import { hasBanner, requestBanner } from '@/platform/permissions';
-import { loadShop, saveShop } from '@/platform/store';
+import { clearDraft, loadDraft, loadShop, saveDraft, saveShop } from '@/platform/store';
 import { fill, h } from './dom';
 import { icon } from './icons';
 import { standingLabel, summaryText } from './labels';
 
 type Mode =
   | { kind: 'list' }
-  | { kind: 'form'; entry: Entry | null }
+  | { kind: 'form'; entry: Entry | null; draft?: Draft }
   | { kind: 'confirm-delete'; id: string };
+
+/** How many years back the date can be set, beyond the entry's own year. */
+const YEARS_BACK = 10;
 
 /**
  * Everything about one shop: its standing, its entries, and the form that adds
@@ -28,8 +33,20 @@ type Mode =
  */
 export async function mountShopView(container: HTMLElement, domain: string): Promise<void> {
   let [shop, banner] = await Promise.all([loadShop(domain), hasBanner(domain)]);
-  let mode: Mode = shop.entries.length > 0 ? { kind: 'list' } : { kind: 'form', entry: null };
+  const unfinished = await loadDraft(domain);
+  let mode: Mode = unfinished
+    ? {
+        kind: 'form',
+        entry: shop.entries.find((entry) => entry.id === unfinished.entryId) ?? null,
+        draft: unfinished,
+      }
+    : restingMode();
   container.classList.add('shop-view');
+
+  /** The list, or an empty form for a shop that has nothing to list. */
+  function restingMode(): Mode {
+    return shop.entries.length > 0 ? { kind: 'list' } : { kind: 'form', entry: null };
+  }
 
   function show(next: Mode) {
     mode = next;
@@ -57,7 +74,7 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
           : h('p', { class: 'muted' }, t('shopNoNotes')),
       ),
       summary && !banner && bannerNotice(),
-      mode.kind === 'form' ? entryForm(mode.entry) : entryList(),
+      mode.kind === 'form' ? entryForm(mode.entry, mode.draft) : entryList(),
     );
   }
 
@@ -135,25 +152,36 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
     const next = withoutEntry(shop, id);
     void saveShop(domain, next).then(() => {
       shop = next;
-      show(shop.entries.length > 0 ? { kind: 'list' } : { kind: 'form', entry: null });
+      show(restingMode());
     });
   }
 
-  function entryForm(entry: Entry | null) {
+  function entryForm(entry: Entry | null, draft?: Draft) {
+    const start = draft ?? {
+      verdict: entry?.verdict ?? null,
+      tags: entry?.tags ?? [],
+      note: entry?.note ?? '',
+      date: entry?.date ?? today(),
+    };
     const error = h('p', { class: 'error', role: 'alert', hidden: true });
+    const fail = (message: string) => {
+      error.textContent = message;
+      error.hidden = false;
+    };
+
     const tagPicker = h(
       'fieldset',
-      { class: 'tag-picker', hidden: !entry },
+      { class: 'tag-picker', hidden: !start.verdict },
       h('legend', {}, t('formTagsLegend')),
       ...(['good', 'bad'] as const).map((verdict) =>
         h(
           'div',
-          { class: 'chips', 'data-verdict': verdict, hidden: entry?.verdict !== verdict },
+          { class: 'chips', 'data-verdict': verdict, hidden: start.verdict !== verdict },
           ...tagsFor(verdict).map((code) =>
             h(
               'label',
               { class: 'chip' },
-              h('input', { type: 'checkbox', name: 'tag', value: code, checked: entry?.tags.includes(code) }),
+              h('input', { type: 'checkbox', name: 'tag', value: code, checked: start.tags.includes(code) }),
               tagLabel(code),
             ),
           ),
@@ -161,40 +189,54 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
       ),
     );
 
-    // Only the tags that belong to the chosen verdict are shown, and a tag
-    // ticked under the other verdict must not come along.
-    const chooseVerdict = (event: Event) => {
-      const chosen = (event.target as HTMLInputElement).value;
-      tagPicker.hidden = false;
+    const read = (): Draft => {
+      const data = new FormData(form);
+      const verdict = data.get('verdict');
+      return {
+        entryId: entry?.id ?? null,
+        verdict: verdict === 'good' || verdict === 'bad' ? verdict : null,
+        tags: data.getAll('tag').map(String),
+        note: String(data.get('note') ?? ''),
+        date: pickedDate(Number(data.get('year')), Number(data.get('month')), Number(data.get('day'))),
+      };
+    };
+
+    // Runs on every change in the form. Only the tags that belong to the
+    // chosen verdict are shown, and a tag ticked under the other verdict must
+    // not come along. What the form holds is then kept as a draft, because the
+    // toolbar popup closes as soon as the user looks at something else.
+    const onInput = () => {
+      const chosen = new FormData(form).get('verdict');
+      tagPicker.hidden = chosen === null;
       for (const group of tagPicker.querySelectorAll<HTMLElement>('.chips')) {
         group.hidden = group.dataset.verdict !== chosen;
         if (!group.hidden) continue;
         for (const box of group.querySelectorAll('input')) box.checked = false;
       }
+      void saveDraft(domain, read());
     };
 
     const submit = (event: Event) => {
       event.preventDefault();
-      const data = new FormData(event.target as HTMLFormElement);
-      const verdict = data.get('verdict');
-      if (verdict !== 'good' && verdict !== 'bad') {
-        error.textContent = t('formVerdictMissing');
-        error.hidden = false;
+      const filled = read();
+      if (!filled.verdict) {
+        fail(t('formVerdictMissing'));
         return;
       }
-      const note = String(data.get('note') ?? '').trim();
+      const note = filled.note.trim();
       const next = withEntry(shop, {
         id: entry?.id ?? newEntryId(),
-        date: String(data.get('date') || today()),
-        verdict,
-        tags: [...data.getAll('tag').map(String), ...unknownTags(entry)],
+        date: filled.date,
+        verdict: filled.verdict,
+        tags: [...filled.tags, ...unknownTags(entry)],
         ...(note && { note }),
       });
 
-      // Both calls are made before anything is awaited. The save is then on
-      // its way even if the permission prompt closes the popup, and the prompt
-      // needs the click that is still in progress.
+      // All three calls are made before anything is awaited. The save is then
+      // on its way even if the permission prompt closes the popup, and the
+      // prompt needs the click that is still in progress.
       const saving = saveShop(domain, next);
+      void clearDraft(domain);
       const asking = requestBanner([domain]);
       void saving.then(
         async () => {
@@ -204,15 +246,20 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
           render();
         },
         () => {
-          error.textContent = t('saveFailed');
-          error.hidden = false;
+          void saveDraft(domain, filled);
+          fail(t('saveFailed'));
         },
       );
     };
 
-    return h(
+    const cancel = () => {
+      void clearDraft(domain);
+      show(restingMode());
+    };
+
+    const form = h(
       'form',
-      { class: 'entry-form', onsubmit: submit },
+      { class: 'entry-form', onsubmit: submit, oninput: onInput },
       h(
         'fieldset',
         { class: 'verdicts' },
@@ -221,13 +268,7 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
           h(
             'label',
             { class: 'verdict', 'data-standing': verdict },
-            h('input', {
-              type: 'radio',
-              name: 'verdict',
-              value: verdict,
-              checked: entry?.verdict === verdict,
-              onchange: chooseVerdict,
-            }),
+            h('input', { type: 'radio', name: 'verdict', value: verdict, checked: start.verdict === verdict }),
             icon(verdict),
             standingLabel(verdict),
           ),
@@ -238,26 +279,59 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
         'label',
         { class: 'field' },
         h('span', {}, t('formNoteLabel')),
-        h('textarea', { name: 'note', rows: '3', maxlength: String(NOTE_MAX_LENGTH) }, entry?.note),
+        h('textarea', { name: 'note', rows: '2', maxlength: String(NOTE_MAX_LENGTH) }, start.note),
       ),
-      h(
-        'label',
-        { class: 'field' },
-        h('span', {}, t('formDateLabel')),
-        h('input', { type: 'date', name: 'date', value: entry?.date ?? today(), max: today() }),
-      ),
+      dateFields(start.date),
       error,
       h(
         'div',
         { class: 'actions' },
         h('button', { type: 'submit', class: 'primary' }, t('save')),
-        shop.entries.length > 0 &&
-          h('button', { type: 'button', onclick: () => show({ kind: 'list' }) }, t('cancel')),
+        h('button', { type: 'button', onclick: cancel }, t('cancel')),
       ),
     );
+    return form;
   }
 
   render();
+}
+
+/**
+ * Three plain lists and not a date input: Firefox opens the calendar of a date
+ * input behind the toolbar popup, where it cannot be reached.
+ */
+function dateFields(date: string) {
+  const [year = 0, month = 1, day = 1] = date.split('-').map(Number);
+  const thisYear = new Date().getFullYear();
+  const years = range(Math.min(year, thisYear - YEARS_BACK), thisYear).reverse();
+  const list = (
+    name: string,
+    label: string,
+    values: number[],
+    chosen: number,
+    text: (value: number) => string = String,
+  ) => {
+    const select = h(
+      'select',
+      { name, 'aria-label': label },
+      ...values.map((value) => h('option', { value: String(value) }, text(value))),
+    );
+    select.value = String(chosen);
+    return select;
+  };
+
+  return h(
+    'fieldset',
+    { class: 'date' },
+    h('legend', {}, t('formDateLabel')),
+    list('day', t('formDay'), range(1, 31), day),
+    list('month', t('formMonth'), range(1, 12), month, monthName),
+    list('year', t('formYear'), years, year),
+  );
+}
+
+function range(from: number, to: number): number[] {
+  return Array.from({ length: to - from + 1 }, (_, index) => from + index);
 }
 
 /** Tags from a newer version have no checkbox here and must survive an edit. */

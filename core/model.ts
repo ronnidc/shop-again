@@ -17,6 +17,16 @@ export interface Shop {
   entries: Entry[];
 }
 
+/** A note form the user has started filling in and not saved yet. */
+export interface Draft {
+  /** The entry being edited, or null for a new one. */
+  entryId: string | null;
+  verdict: Verdict | null;
+  tags: string[];
+  note: string;
+  date: string;
+}
+
 export interface Summary {
   standing: Standing;
   good: number;
@@ -33,9 +43,23 @@ export function newEntryId(): string {
 
 /** Today in the user's own time zone, not UTC. */
 export function today(now = new Date()): string {
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${now.getFullYear()}-${month}-${day}`;
+  return isoDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
+}
+
+/**
+ * The date from a day, a month and a year picked separately. A day the month
+ * does not have becomes its last day, and a day that has not come yet becomes
+ * today.
+ */
+export function pickedDate(year: number, month: number, day: number, now = new Date()): string {
+  const lastDay = new Date(year, month, 0).getDate();
+  const date = isoDate(year, month, Math.min(day, lastDay));
+  const latest = today(now);
+  return date > latest ? latest : date;
+}
+
+function isoDate(year: number, month: number, day: number): string {
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
 /** Newest first. Entries on the same day keep the latest added on top. */

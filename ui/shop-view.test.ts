@@ -1,7 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { Shop } from '@/core/model';
-import { loadShop, saveShop } from '@/platform/store';
+import { loadDraft, loadShop, saveShop } from '@/platform/store';
 import { mountShopView } from './shop-view';
 
 const DOMAIN = 'av-cables.dk';
@@ -11,6 +11,7 @@ const existing: Shop = {
   ],
 };
 
+/** Mounting again is what happens when the popup closes and is opened anew. */
 async function mount(): Promise<HTMLElement> {
   const view = document.createElement('div');
   document.body.replaceChildren(view);
@@ -19,11 +20,29 @@ async function mount(): Promise<HTMLElement> {
 }
 
 const settle = () => new Promise((resolve) => setTimeout(resolve));
-const click = (view: HTMLElement, selector: string) => view.querySelector<HTMLElement>(selector)!.click();
+const field = <Field extends HTMLElement>(view: HTMLElement, selector: string) =>
+  view.querySelector<Field>(selector)!;
+const click = (view: HTMLElement, selector: string) => field(view, selector).click();
 const press = (view: HTMLElement, label: string) =>
   [...view.querySelectorAll('button')].find((button) => button.textContent === label)!.click();
 const submit = (view: HTMLElement) =>
-  view.querySelector('form')!.dispatchEvent(new Event('submit', { cancelable: true }));
+  field(view, 'form').dispatchEvent(new Event('submit', { cancelable: true }));
+
+function enter(view: HTMLElement, selector: string, value: string) {
+  const input = field<HTMLTextAreaElement | HTMLSelectElement>(view, selector);
+  input.value = value;
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+// The year list reaches back from the current year, so the clock is pinned.
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(new Date(2026, 9, 5, 12));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 describe('a shop without notes', () => {
   it('opens on the form and asks for a verdict before saving', async () => {
@@ -33,7 +52,7 @@ describe('a shop without notes', () => {
     submit(view);
     await settle();
 
-    expect(view.querySelector('.error')!.textContent).toBe('Choose good or bad first.');
+    expect(field(view, '.error').textContent).toBe('Choose good or bad first.');
     expect(await loadShop(DOMAIN)).toEqual({ entries: [] });
   });
 
@@ -41,8 +60,9 @@ describe('a shop without notes', () => {
     const view = await mount();
     click(view, 'input[value="bad"]');
     click(view, 'input[value="slow-delivery"]');
-    view.querySelector('textarea')!.value = ' Six days ';
-    view.querySelector<HTMLInputElement>('input[name="date"]')!.value = '2026-03-14';
+    enter(view, 'textarea', ' Six days ');
+    enter(view, 'select[name="day"]', '14');
+    enter(view, 'select[name="month"]', '3');
 
     submit(view);
     await settle();
@@ -56,9 +76,24 @@ describe('a shop without notes', () => {
     expect(view.textContent).toContain('1 bad');
   });
 
+  it('starts the date on today and never saves a day that has not come', async () => {
+    const view = await mount();
+    expect(field<HTMLSelectElement>(view, 'select[name="day"]').value).toBe('5');
+    expect(field<HTMLSelectElement>(view, 'select[name="month"]').value).toBe('10');
+    expect(field<HTMLSelectElement>(view, 'select[name="year"]').value).toBe('2026');
+
+    click(view, 'input[value="good"]');
+    enter(view, 'select[name="day"]', '31');
+    enter(view, 'select[name="month"]', '12');
+    submit(view);
+    await settle();
+
+    expect((await loadShop(DOMAIN)).entries[0]?.date).toBe('2026-10-05');
+  });
+
   it('shows only the tags of the chosen verdict and drops the ones ticked under the other', async () => {
     const view = await mount();
-    const group = (verdict: string) => view.querySelector<HTMLElement>(`.chips[data-verdict="${verdict}"]`)!;
+    const group = (verdict: string) => field(view, `.chips[data-verdict="${verdict}"]`);
 
     click(view, 'input[value="good"]');
     expect(group('good').hidden).toBe(false);
@@ -88,6 +123,70 @@ describe('a shop without notes', () => {
   });
 });
 
+describe('a note in progress', () => {
+  it('is still there when the popup has closed and is opened again', async () => {
+    const first = await mount();
+    click(first, 'input[value="bad"]');
+    click(first, 'input[value="wrong-stock"]');
+    enter(first, 'textarea', 'Said in stock, was not');
+    enter(first, 'select[name="day"]', '2');
+    await settle();
+
+    const reopened = await mount();
+
+    expect(field<HTMLInputElement>(reopened, 'input[value="bad"]').checked).toBe(true);
+    expect(field<HTMLInputElement>(reopened, 'input[value="wrong-stock"]').checked).toBe(true);
+    expect(field(reopened, '.chips[data-verdict="bad"]').hidden).toBe(false);
+    expect(field<HTMLTextAreaElement>(reopened, 'textarea').value).toBe('Said in stock, was not');
+    expect(field<HTMLSelectElement>(reopened, 'select[name="day"]').value).toBe('2');
+    expect(await loadShop(DOMAIN)).toEqual({ entries: [] });
+  });
+
+  it('brings an edit back to the entry it belongs to', async () => {
+    await saveShop(DOMAIN, existing);
+    const first = await mount();
+    press(first, 'Edit');
+    enter(first, 'textarea', 'Six days, then a wrong cable');
+    await settle();
+
+    const reopened = await mount();
+    expect(field<HTMLTextAreaElement>(reopened, 'textarea').value).toBe('Six days, then a wrong cable');
+    submit(reopened);
+    await settle();
+
+    const { entries } = await loadShop(DOMAIN);
+    expect(entries).toHaveLength(1);
+    expect(entries[0]).toMatchObject({ id: 'a', note: 'Six days, then a wrong cable' });
+  });
+
+  it('is forgotten once it is saved', async () => {
+    const view = await mount();
+    click(view, 'input[value="good"]');
+    await settle();
+    expect(await loadDraft(DOMAIN)).not.toBeNull();
+
+    submit(view);
+    await settle();
+
+    expect(await loadDraft(DOMAIN)).toBeNull();
+    expect((await mount()).querySelector('form')).toBeNull();
+  });
+
+  it('is forgotten when the user cancels', async () => {
+    const view = await mount();
+    click(view, 'input[value="bad"]');
+    enter(view, 'textarea', 'Never mind');
+    await settle();
+
+    press(view, 'Cancel');
+    await settle();
+
+    expect(await loadDraft(DOMAIN)).toBeNull();
+    expect(field<HTMLTextAreaElement>(view, 'textarea').value).toBe('');
+    expect(field<HTMLInputElement>(view, 'input[value="bad"]').checked).toBe(false);
+  });
+});
+
 describe('a shop with notes', () => {
   it('lists them and keeps tags from a newer version through an edit', async () => {
     await saveShop(DOMAIN, existing);
@@ -98,7 +197,7 @@ describe('a shop with notes', () => {
     expect(view.textContent).toContain('from-a-newer-version');
 
     press(view, 'Edit');
-    expect(view.querySelector<HTMLInputElement>('input[value="slow-delivery"]')!.checked).toBe(true);
+    expect(field<HTMLInputElement>(view, 'input[value="slow-delivery"]').checked).toBe(true);
     click(view, 'input[value="wrong-stock"]');
     submit(view);
     await settle();

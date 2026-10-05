@@ -1,4 +1,4 @@
-import { parseShop, type Shop } from '@/core/model';
+import { parseShop, type Draft, type Shop } from '@/core/model';
 import { browser } from './browser';
 
 // Everything the extension remembers goes through this module. The notes live
@@ -7,6 +7,7 @@ import { browser } from './browser';
 
 const SHOP_PREFIX = 'shop:';
 const SETTINGS_KEY = 'settings';
+const DRAFT_PREFIX = 'draft:';
 
 export interface Settings {
   /** Show the entries in the right-click menu. */
@@ -69,6 +70,34 @@ export async function loadSettings(): Promise<Settings> {
 
 export function saveSettings(settings: Settings): Promise<void> {
   return browser.storage.sync.set({ [SETTINGS_KEY]: settings });
+}
+
+// The toolbar popup closes the moment it loses focus, for example when the
+// user looks up a date in a mail. A draft keeps what was typed until the popup
+// is opened again. It lives in session storage: on this computer only, and
+// gone when the browser closes, so an abandoned draft cannot linger for weeks.
+
+export async function loadDraft(domain: string): Promise<Draft | null> {
+  const key = DRAFT_PREFIX + domain;
+  const items = await browser.storage.session.get(key);
+  return (items[key] as Draft | undefined) ?? null;
+}
+
+/** Not async, for the same reason as saveShop. */
+export function saveDraft(domain: string, draft: Draft): Promise<void> {
+  return browser.storage.session.set({ [DRAFT_PREFIX + domain]: draft });
+}
+
+export function clearDraft(domain: string): Promise<void> {
+  return browser.storage.session.remove(DRAFT_PREFIX + domain);
+}
+
+/** The shops that have an unfinished note. */
+export async function loadDraftDomains(): Promise<string[]> {
+  const items = await browser.storage.session.get(null);
+  return Object.keys(items)
+    .filter((key) => key.startsWith(DRAFT_PREFIX))
+    .map((key) => key.slice(DRAFT_PREFIX.length));
 }
 
 /** Also fires for changes that arrive from another computer through sync. */

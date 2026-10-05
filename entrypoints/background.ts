@@ -5,6 +5,7 @@ import { browser } from '@/platform/browser';
 import { t } from '@/platform/i18n';
 import { grantedPatterns, onBannerAccessChange, releaseBanner } from '@/platform/permissions';
 import { loadSettings, loadShop, onStoreChange } from '@/platform/store';
+import { openNoteWindow } from '@/platform/windows';
 
 const BANNER_SCRIPT = 'banner';
 const MENU_PAGE = 'note-page';
@@ -29,7 +30,7 @@ export default defineBackground(() => {
     // A shop without notes has no banner to show, so the access goes too.
     for (const domain of change.removedShops) void releaseBanner(domain);
   });
-  browser.contextMenus.onClicked.addListener(openNoteWindow);
+  browser.contextMenus.onClicked.addListener(openNoteFromMenu);
   browser.runtime.onMessage.addListener(answer);
 });
 
@@ -69,18 +70,14 @@ async function syncBannerScript() {
   else await browser.scripting.registerContentScripts([script]);
 }
 
-function openNoteWindow(info: { menuItemId: string | number; linkUrl?: string; pageUrl?: string }, tab?: { url?: string }) {
+function openNoteFromMenu(
+  info: { menuItemId: string | number; linkUrl?: string; pageUrl?: string },
+  tab?: { url?: string },
+) {
   const address = info.menuItemId === MENU_LINK ? info.linkUrl : (info.pageUrl ?? tab?.url);
-  const domain = address ? shopKey(address) : null;
-  const query = new URLSearchParams({ window: '1', ...(domain && { domain }) });
   // The toolbar popup only knows the active tab, and a link can point at
-  // another shop, so the note opens in a small window of its own.
-  void browser.windows.create({
-    url: `${browser.runtime.getURL('/popup.html')}?${query}`,
-    type: 'popup',
-    width: 400,
-    height: 640,
-  });
+  // another shop, so the note opens in a window.
+  void openNoteWindow(address ? shopKey(address) : null);
 }
 
 function answer(

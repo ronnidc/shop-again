@@ -4,11 +4,20 @@ import './style.css';
 import { shopKey } from '@/core/domain';
 import { browser } from '@/platform/browser';
 import { t } from '@/platform/i18n';
-import { h } from '@/ui/dom';
+import { loadDraftDomains } from '@/platform/store';
+import { openNoteWindow } from '@/platform/windows';
+import { fill, h } from '@/ui/dom';
 import { mountShopView } from '@/ui/shop-view';
 
-const shopElement = document.querySelector<HTMLElement>('#shop')!;
-const moreElement = document.querySelector<HTMLElement>('#more')!;
+const element = (id: string) => document.querySelector<HTMLElement>(`#${id}`)!;
+
+const query = new URLSearchParams(location.search);
+// Opened from the right-click menu or with "Open in a window", the page is a
+// window of its own and not the fixed-width toolbar popup.
+const standalone = query.has('window');
+
+/** The shop on show, which is not always the one in the active tab. */
+let current: string | null = null;
 
 async function activeShop(): Promise<string | null> {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
@@ -16,8 +25,31 @@ async function activeShop(): Promise<string | null> {
 }
 
 async function open(domain: string | null) {
-  if (domain) await mountShopView(shopElement, domain);
-  else shopElement.replaceChildren(h('p', { class: 'muted' }, t('popupNoShop')));
+  current = domain;
+  if (domain) await mountShopView(element('shop'), domain);
+  else fill(element('shop'), h('p', { class: 'muted' }, t('popupNoShop')));
+  otherShop.open = domain === null;
+  await showDrafts();
+}
+
+/**
+ * A note the user started on another shop is one click away, so looking
+ * something up in another tab and opening the popup there does not strand it.
+ */
+async function showDrafts() {
+  const domains = (await loadDraftDomains()).filter((domain) => domain !== current);
+  fill(
+    element('drafts'),
+    ...domains.map((domain) =>
+      h(
+        'p',
+        { class: 'notice' },
+        t('draftElsewhere', domain),
+        ' ',
+        h('button', { type: 'button', class: 'link', onclick: () => void open(domain) }, t('draftContinue')),
+      ),
+    ),
+  );
 }
 
 /**
@@ -28,8 +60,8 @@ async function open(domain: string | null) {
 function otherShopForm() {
   const error = h('p', { class: 'error', role: 'alert', hidden: true });
   const input = h('input', {
-    id: 'other-shop',
     type: 'text',
+    'aria-label': t('otherShopLabel'),
     placeholder: t('otherShopPlaceholder'),
     autocomplete: 'off',
     spellcheck: 'false',
@@ -43,30 +75,32 @@ function otherShopForm() {
     input.value = '';
     void open(domain);
   };
-  return [
-    h(
-      'form',
-      { class: 'other-shop', onsubmit: submit },
-      h('label', { for: 'other-shop' }, t('otherShopLabel')),
-      input,
-      h('button', { type: 'submit' }, t('otherShopOpen')),
-    ),
+  return h(
+    'details',
+    { class: 'other-shop' },
+    h('summary', {}, t('otherShopLabel')),
+    h('form', { onsubmit: submit }, input, h('button', { type: 'submit' }, t('otherShopOpen'))),
     error,
-  ];
+  );
 }
 
-const query = new URLSearchParams(location.search);
-// Opened from the right-click menu, the page is a window of its own and not
-// the fixed-width toolbar popup.
-document.documentElement.classList.toggle('standalone', query.has('window'));
-document.documentElement.lang = browser.i18n.getUILanguage();
+const otherShop = otherShopForm();
+const moveToWindow = () => void openNoteWindow(current).then(() => window.close());
 
-moreElement.append(
-  ...otherShopForm(),
+document.documentElement.classList.toggle('standalone', standalone);
+document.documentElement.lang = browser.i18n.getUILanguage();
+element('more').append(
+  otherShop,
   h(
-    'button',
-    { type: 'button', class: 'link', onclick: () => void browser.runtime.openOptionsPage() },
-    t('allShops'),
+    'div',
+    { class: 'links' },
+    // What is typed so far follows along, because the draft is stored.
+    !standalone && h('button', { type: 'button', class: 'link', onclick: moveToWindow }, t('openInWindow')),
+    h(
+      'button',
+      { type: 'button', class: 'link', onclick: () => void browser.runtime.openOptionsPage() },
+      t('allShops'),
+    ),
   ),
 );
 

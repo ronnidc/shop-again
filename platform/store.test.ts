@@ -1,11 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import type { Shop } from '@/core/model';
+import type { Draft, Shop } from '@/core/model';
 import {
+  clearDraft,
+  loadDraft,
+  loadDraftDomains,
   loadSettings,
   loadShop,
   loadShops,
   onStoreChange,
+  saveDraft,
   saveSettings,
   saveShop,
   saveShops,
@@ -42,6 +46,28 @@ describe('settings', () => {
     expect(await loadSettings()).toEqual({ contextMenu: true });
     await saveSettings({ contextMenu: false });
     expect(await loadSettings()).toEqual({ contextMenu: false });
+  });
+});
+
+describe('drafts', () => {
+  const draft: Draft = { entryId: null, verdict: 'bad', tags: ['wrong-stock'], note: 'Half a note', date: '2026-10-05' };
+
+  it('keeps an unfinished note apart from the saved ones', async () => {
+    expect(await loadDraft('av-cables.dk')).toBeNull();
+
+    await saveDraft('av-cables.dk', draft);
+
+    expect(await loadDraft('av-cables.dk')).toEqual(draft);
+    expect(await loadDraftDomains()).toEqual(['av-cables.dk']);
+    expect(await loadShops()).toEqual({});
+    expect(await fakeBrowser.storage.sync.get(null)).toEqual({});
+  });
+
+  it('forgets a draft when asked to', async () => {
+    await saveDraft('av-cables.dk', draft);
+    await clearDraft('av-cables.dk');
+    expect(await loadDraft('av-cables.dk')).toBeNull();
+    expect(await loadDraftDomains()).toEqual([]);
   });
 });
 

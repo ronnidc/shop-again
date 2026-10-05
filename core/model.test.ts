@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { byNewest, parseShop, summarize, today, withEntry, withoutEntry, type Entry } from './model';
+import {
+  byNewest,
+  parseShop,
+  pickedDate,
+  summarize,
+  today,
+  withEntry,
+  withoutEntry,
+  type Entry,
+} from './model';
 
 const entry = (overrides: Partial<Entry>): Entry => ({
   id: 'a',
@@ -79,5 +88,22 @@ describe('parseShop', () => {
 describe('today', () => {
   it('is the local day, zero padded', () => {
     expect(today(new Date(2026, 2, 4, 23, 30))).toBe('2026-03-04');
+  });
+});
+
+describe('pickedDate', () => {
+  const now = new Date(2026, 9, 5);
+
+  it('puts a day, a month and a year together', () => {
+    expect(pickedDate(2026, 3, 14, now)).toBe('2026-03-14');
+  });
+
+  it('turns a day the month does not have into its last day', () => {
+    expect(pickedDate(2026, 2, 31, now)).toBe('2026-02-28');
+    expect(pickedDate(2024, 2, 31, now)).toBe('2024-02-29');
+  });
+
+  it('turns a day that has not come yet into today', () => {
+    expect(pickedDate(2026, 12, 24, now)).toBe('2026-10-05');
   });
 });
