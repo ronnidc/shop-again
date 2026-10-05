@@ -1,0 +1,27 @@
+/* System colors and the system font let the popup follow each browser's own
+   light and dark look without a design per browser. */
+:root {
+  color-scheme: light dark;
+  --space: 12px;
+  --text-muted: color-mix(in srgb, CanvasText 65%, Canvas);
+}
+
+body {
+  inline-size: 360px;
+  margin: 0;
+  padding: var(--space);
+  background: Canvas;
+  color: CanvasText;
+  font: 14px/1.4 system-ui, sans-serif;
+}
+
+h1 {
+  margin-block: 0 4px;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+p {
+  margin: 0;
+  color: var(--text-muted);
+}

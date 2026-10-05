@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Shop Again?"
+  },
+  "extDescription": {
+    "message": "Your own notes on web shops you have bought from, shown when you come back."
+  },
+  "popupNoShop": {
+    "message": "Open a web shop to add a note about it."
+  },
+  "popupNoNotes": {
+    "message": "No notes about this shop yet."
+  }
+}

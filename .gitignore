@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+*.log
+.claude/
+
+# WXT
+.output/
+.wxt/
+stats.html
+stats-*.json
+web-ext.config.ts

@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Shop Again?"
+  },
+  "extDescription": {
+    "message": "Dine egne noter om webshops, du har handlet i, vist når du kommer tilbage."
+  },
+  "popupNoShop": {
+    "message": "Åbn en webshop for at skrive en note om den."
+  },
+  "popupNoNotes": {
+    "message": "Ingen noter om denne shop endnu."
+  }
+}
