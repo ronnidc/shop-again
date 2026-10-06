@@ -28,6 +28,7 @@ export default defineContentScript({
     mountBanner({
       css,
       collapsed: data.collapsed,
+      tab: data.tab,
       onCollapse: () => void ask({ type: 'banner:seen' }),
       content: {
         standing,

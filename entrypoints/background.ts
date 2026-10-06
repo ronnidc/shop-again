@@ -1,10 +1,10 @@
-import { shopKey } from '@/core/domain';
+import { permissionPattern, shopKey } from '@/core/domain';
 import type { BannerData, Message } from '@/core/messages';
 import { summarize, type Standing } from '@/core/model';
 import { browser } from '@/platform/browser';
 import { t } from '@/platform/i18n';
-import { grantedPatterns, onBannerAccessChange, releaseBanner } from '@/platform/permissions';
-import { loadSettings, loadShop, onStoreChange } from '@/platform/store';
+import { hasBanner, onBannerAccessChange, releaseBanner } from '@/platform/permissions';
+import { loadSettings, loadShop, loadShops, onStoreChange } from '@/platform/store';
 import { openNoteWindow } from '@/platform/windows';
 
 const BANNER_SCRIPT = 'banner';
@@ -27,6 +27,7 @@ export default defineBackground(() => {
   onBannerAccessChange(() => inTurn(syncBannerScript));
   onStoreChange((change) => {
     if (change.settingsChanged) inTurn(syncContextMenu);
+    if (change.settingsChanged || change.shopsChanged) inTurn(syncBannerScript);
     // A shop without notes has no banner to show, so the access goes too.
     for (const domain of change.removedShops) void releaseBanner(domain);
   });
@@ -49,9 +50,15 @@ async function syncContextMenu() {
   browser.contextMenus.create({ id: MENU_LINK, title: t('menuNoteLink'), contexts: ['link'] });
 }
 
-/** The banner script runs exactly where the user has given access. */
+/**
+ * The banner script runs on the shops that have notes and that the user has
+ * given access to, and nowhere else, even when access covers every site.
+ */
 async function syncBannerScript() {
-  const matches = await grantedPatterns();
+  const { banner } = await loadSettings();
+  const domains = banner === 'off' ? [] : Object.keys(await loadShops());
+  const access = await Promise.all(domains.map(hasBanner));
+  const matches = domains.filter((_, index) => access[index]).map(permissionPattern);
   const registered = await browser.scripting.getRegisteredContentScripts({ ids: [BANNER_SCRIPT] });
   if (matches.length === 0) {
     if (registered.length > 0) {
@@ -103,8 +110,8 @@ async function bannerData(domain: string, tabId: number | undefined): Promise<Ba
   if (!summary) return null;
   if (tabId !== undefined) void markTab(tabId, summary.standing);
   const key = seenKey(domain);
-  const seen = await browser.storage.session.get(key);
-  return { summary, collapsed: seen[key] === true };
+  const [seen, { tab }] = await Promise.all([browser.storage.session.get(key), loadSettings()]);
+  return { summary, collapsed: seen[key] === true, tab };
 }
 
 /** The toolbar button shows the verdict too. The browser clears it on the next navigation. */

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { Shop } from '@/core/model';
-import { loadDraft, loadShop, saveShop } from '@/platform/store';
+import { DEFAULT_SETTINGS, loadDraft, loadShop, saveSettings, saveShop } from '@/platform/store';
 import { mountShopView } from './shop-view';
 
 const DOMAIN = 'av-cables.dk';
@@ -106,6 +106,41 @@ describe('a shop without notes', () => {
     await settle();
 
     expect((await loadShop(DOMAIN)).entries[0]).toMatchObject({ verdict: 'bad', tags: [] });
+  });
+
+  it('says what the browser will ask before saving, and not once access is there', async () => {
+    const asking = await mount();
+    expect(asking.textContent).toContain('Saving asks the browser for access to av-cables.dk,');
+
+    fakeBrowser.permissions.contains = vi.fn(async () => true);
+    const granted = await mount();
+    expect(granted.textContent).not.toContain('asks the browser for access');
+  });
+
+  it('asks for every site when that is the chosen setting', async () => {
+    await saveSettings({ ...DEFAULT_SETTINGS, banner: 'all' });
+    const view = await mount();
+    expect(view.textContent).toContain('asks the browser for access to all sites');
+
+    click(view, 'input[value="good"]');
+    submit(view);
+    await settle();
+
+    expect(fakeBrowser.permissions.request).toHaveBeenCalledWith({ origins: ['*://*/*'] });
+  });
+
+  it('never asks when the banner is turned off, and does not offer it either', async () => {
+    await saveSettings({ ...DEFAULT_SETTINGS, banner: 'off' });
+    const view = await mount();
+    expect(view.textContent).not.toContain('asks the browser');
+
+    click(view, 'input[value="bad"]');
+    submit(view);
+    await settle();
+
+    expect(fakeBrowser.permissions.request).not.toHaveBeenCalled();
+    expect((await loadShop(DOMAIN)).entries).toHaveLength(1);
+    expect(view.textContent).not.toContain('The banner is off');
   });
 
   it('offers to turn the banner on when the user said no to access', async () => {

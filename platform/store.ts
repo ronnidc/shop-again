@@ -9,12 +9,21 @@ const SHOP_PREFIX = 'shop:';
 const SETTINGS_KEY = 'settings';
 const DRAFT_PREFIX = 'draft:';
 
+/**
+ * How the banner gets its access to a shop's site: asked for shop by shop as
+ * notes are saved, given for every site once, or never, with no banner.
+ */
+export type BannerMode = 'ask' | 'all' | 'off';
+
 export interface Settings {
   /** Show the entries in the right-click menu. */
   contextMenu: boolean;
+  banner: BannerMode;
+  /** Leave a small tab in the shop after the banner is closed. */
+  tab: boolean;
 }
 
-const DEFAULT_SETTINGS: Settings = { contextMenu: true };
+export const DEFAULT_SETTINGS: Settings = { contextMenu: true, banner: 'ask', tab: true };
 
 export interface StoreChange {
   /** Shops whose last entry was deleted. */
@@ -62,8 +71,11 @@ export async function loadSettings(): Promise<Settings> {
   const items = await browser.storage.sync.get(SETTINGS_KEY);
   const stored: unknown = items[SETTINGS_KEY];
   const settings = { ...DEFAULT_SETTINGS };
-  if (typeof stored === 'object' && stored !== null && 'contextMenu' in stored) {
-    settings.contextMenu = stored.contextMenu !== false;
+  if (typeof stored !== 'object' || stored === null) return settings;
+  if ('contextMenu' in stored) settings.contextMenu = stored.contextMenu !== false;
+  if ('tab' in stored) settings.tab = stored.tab !== false;
+  if ('banner' in stored && (stored.banner === 'all' || stored.banner === 'off')) {
+    settings.banner = stored.banner;
   }
   return settings;
 }

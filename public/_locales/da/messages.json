@@ -22,7 +22,7 @@
   "tag_easy_return": { "message": "Nem retur" },
 
   "popupNoShop": {
-    "message": "Åbn en webshop for at skrive en note om den, eller skriv dens adresse herunder."
+    "message": "Åbn en webshop for at skrive en note om den, eller tilføj en ud fra dens adresse under Alle shops."
   },
   "shopNoNotes": { "message": "Ingen noter om denne shop endnu." },
   "addExperience": { "message": "Tilføj en oplevelse" },
@@ -44,8 +44,13 @@
     "message": "Noten kunne ikke gemmes. Browserens synkroniserede lager er måske fyldt."
   },
   "bannerOff": { "message": "Banneret er slået fra for denne shop på denne computer." },
+  "accessAskShop": {
+    "message": "Når du gemmer, beder browseren om adgang til $1, kun for at vise dit banner der."
+  },
+  "accessAskAll": {
+    "message": "Når du gemmer, beder browseren om adgang til alle sider, som valgt i indstillingerne."
+  },
   "bannerTurnOn": { "message": "Slå til" },
-  "otherShopLabel": { "message": "En anden shop" },
   "otherShopPlaceholder": { "message": "shop.dk eller et link" },
   "otherShopOpen": { "message": "Åbn" },
   "otherShopInvalid": { "message": "Det ligner ikke en shop-adresse." },
@@ -76,6 +81,16 @@
   "bannerTurnOnAll": { "message": "Slå til for alle" },
   "settingsHeading": { "message": "Indstillinger" },
   "settingContextMenu": { "message": "Vis Shop Again? i højreklik-menuen" },
+  "settingsBannerHeading": { "message": "Banneret på shops, du har noter om" },
+  "settingsBannerExplain": {
+    "message": "For at vise banneret skal udvidelsen have browserens tilladelse til shoppens side, og browseren beskriver det som at læse og ændre dine data på den side. Udvidelsen tilføjer kun banneret og laver ingen netværkskald."
+  },
+  "bannerModeAsk": { "message": "Spørg om adgang til hver shop, når jeg gemmer en note" },
+  "bannerModeAll": { "message": "Giv adgang til alle sider én gang, så den aldrig spørger igen" },
+  "bannerModeOff": { "message": "Intet banner, og spørg aldrig" },
+  "settingTab": {
+    "message": "Lad en lille fane blive i toppen af shoppen, når banneret er lukket"
+  },
   "dataHeading": { "message": "Dine data" },
   "dataExplain": {
     "message": "Dine noter ligger i browserens eget synkroniserede lager og sendes aldrig andre steder hen."

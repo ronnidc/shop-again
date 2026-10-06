@@ -2,8 +2,24 @@ import { shopKey } from '@/core/domain';
 import { summarize, today, type Shop, type Summary } from '@/core/model';
 import { mergeShop, parseExportFile, toExportFile } from '@/core/transfer';
 import { formatMonth, t, tagLabel } from '@/platform/i18n';
-import { hasBanner, onBannerAccessChange, requestBanner } from '@/platform/permissions';
-import { loadSettings, loadShops, onStoreChange, saveSettings, saveShops } from '@/platform/store';
+import {
+  hasBanner,
+  onBannerAccessChange,
+  releaseAllBanners,
+  releaseBannerEverywhere,
+  requestBanner,
+  requestBannerEverywhere,
+} from '@/platform/permissions';
+import {
+  DEFAULT_SETTINGS,
+  loadSettings,
+  loadShops,
+  onStoreChange,
+  saveSettings,
+  saveShops,
+  type BannerMode,
+  type Settings,
+} from '@/platform/store';
 import { fill, h } from './dom';
 import { icon } from './icons';
 import { standingLabel, summaryText } from './labels';
@@ -11,6 +27,12 @@ import { mountShopView } from './shop-view';
 
 const FILTERS = ['all', 'bad', 'mixed', 'good'] as const;
 type Filter = (typeof FILTERS)[number];
+
+const BANNER_MODES = {
+  ask: 'bannerModeAsk',
+  all: 'bannerModeAll',
+  off: 'bannerModeOff',
+} as const;
 
 /**
  * The page with every shop the user has notes on: search and filter, one shop
@@ -20,10 +42,12 @@ export function mountOverview(root: HTMLElement): void {
   let shops: Record<string, Shop> = {};
   /** Shops whose banner cannot show on this computer, because access was never given here. */
   let withoutBanner: string[] = [];
+  let settings: Settings = DEFAULT_SETTINGS;
   let search = '';
   let filter: Filter = 'all';
 
   const list = h('div', { class: 'shop-list' });
+  const settingsSection = h('section', {});
   const shopView = h('div', {});
   const dialog = h(
     'dialog',
@@ -33,11 +57,12 @@ export function mountOverview(root: HTMLElement): void {
   );
 
   async function refresh() {
-    shops = await loadShops();
+    [shops, settings] = await Promise.all([loadShops(), loadSettings()]);
     const domains = Object.keys(shops);
     const access = await Promise.all(domains.map(hasBanner));
     withoutBanner = domains.filter((_, index) => !access[index]);
     renderList();
+    renderSettings();
   }
 
   function matches(domain: string, shop: Shop, summary: Summary): boolean {
@@ -58,11 +83,13 @@ export function mountOverview(root: HTMLElement): void {
 
     // A click handler, so the permission prompt is allowed to open. One prompt
     // covers every shop on the list.
-    const turnOnAll = () => void requestBanner(withoutBanner).then(refresh);
+    const turnOnAll = () =>
+      void (settings.banner === 'all' ? requestBannerEverywhere() : requestBanner(withoutBanner)).then(refresh);
 
     fill(
       list,
       withoutBanner.length > 0 &&
+        settings.banner !== 'off' &&
         h(
           'p',
           { class: 'notice' },
@@ -157,18 +184,71 @@ export function mountOverview(root: HTMLElement): void {
     ];
   }
 
-  function settingsSection() {
-    const box = h('input', { type: 'checkbox', checked: true });
-    void loadSettings().then((settings) => {
-      box.checked = settings.contextMenu;
-    });
-    box.addEventListener('change', () => void saveSettings({ contextMenu: box.checked }));
-    return h(
-      'section',
-      {},
+  function renderSettings() {
+    const toggleMenu = (event: Event) => {
+      settings = { ...settings, contextMenu: (event.target as HTMLInputElement).checked };
+      void saveSettings(settings);
+    };
+    const toggleTab = (event: Event) => {
+      settings = { ...settings, tab: (event.target as HTMLInputElement).checked };
+      void saveSettings(settings);
+    };
+    fill(
+      settingsSection,
       h('h2', {}, t('settingsHeading')),
-      h('label', { class: 'check' }, box, t('settingContextMenu')),
+      h(
+        'label',
+        { class: 'check' },
+        h('input', { type: 'checkbox', checked: settings.contextMenu, onchange: toggleMenu }),
+        t('settingContextMenu'),
+      ),
+      h(
+        'fieldset',
+        { class: 'banner-modes' },
+        h('legend', {}, t('settingsBannerHeading')),
+        h('p', { class: 'muted' }, t('settingsBannerExplain')),
+        ...(Object.keys(BANNER_MODES) as BannerMode[]).map((mode) =>
+          h(
+            'label',
+            { class: 'check' },
+            h('input', {
+              type: 'radio',
+              name: 'banner',
+              value: mode,
+              checked: settings.banner === mode,
+              onchange: () => chooseBannerMode(mode),
+            }),
+            t(BANNER_MODES[mode]),
+          ),
+        ),
+        h(
+          'label',
+          { class: 'check tab-setting' },
+          h('input', { type: 'checkbox', name: 'tab', checked: settings.tab, onchange: toggleTab }),
+          t('settingTab'),
+        ),
+      ),
     );
+  }
+
+  /**
+   * Giving access to every site needs the browser's prompt, so that comes
+   * first, inside the click. Leaving that choice gives the access back, and
+   * choosing no banner gives back every site.
+   */
+  function chooseBannerMode(mode: BannerMode) {
+    const allowed = mode === 'all' ? requestBannerEverywhere() : Promise.resolve(true);
+    void allowed.then(async (granted) => {
+      if (!granted) {
+        renderSettings();
+        return;
+      }
+      if (settings.banner === 'all' && mode !== 'all') await releaseBannerEverywhere();
+      if (mode === 'off') await releaseAllBanners();
+      settings = { ...settings, banner: mode };
+      await saveSettings(settings);
+      await refresh();
+    });
   }
 
   function dataSection() {
@@ -231,7 +311,7 @@ export function mountOverview(root: HTMLElement): void {
   fill(
     root,
     h('header', {}, h('h1', {}, t('extName')), h('p', { class: 'muted' }, t('optionsTagline'))),
-    h('main', {}, h('section', {}, ...toolbar(), list), settingsSection(), dataSection()),
+    h('main', {}, h('section', {}, ...toolbar(), list), settingsSection, dataSection()),
     dialog,
   );
 

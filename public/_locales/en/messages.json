@@ -22,7 +22,7 @@
   "tag_easy_return": { "message": "Easy return" },
 
   "popupNoShop": {
-    "message": "Open a web shop to add a note about it, or type its address below."
+    "message": "Open a web shop to add a note about it, or add one by its address under All shops."
   },
   "shopNoNotes": { "message": "No notes about this shop yet." },
   "addExperience": { "message": "Add an experience" },
@@ -44,8 +44,13 @@
     "message": "The note could not be saved. The browser's sync storage may be full."
   },
   "bannerOff": { "message": "The banner is off for this shop on this computer." },
+  "accessAskShop": {
+    "message": "Saving asks the browser for access to $1, used only to show your banner there."
+  },
+  "accessAskAll": {
+    "message": "Saving asks the browser for access to all sites, as chosen in the settings."
+  },
   "bannerTurnOn": { "message": "Turn on" },
-  "otherShopLabel": { "message": "Another shop" },
   "otherShopPlaceholder": { "message": "shop.com or a link" },
   "otherShopOpen": { "message": "Open" },
   "otherShopInvalid": { "message": "That does not look like a shop address." },
@@ -76,6 +81,16 @@
   "bannerTurnOnAll": { "message": "Turn on for all" },
   "settingsHeading": { "message": "Settings" },
   "settingContextMenu": { "message": "Show Shop Again? in the right-click menu" },
+  "settingsBannerHeading": { "message": "The banner on shops you have notes on" },
+  "settingsBannerExplain": {
+    "message": "To show the banner, the extension needs the browser's permission for the shop's site, which the browser describes as reading and changing your data on that site. The extension only adds the banner and makes no network requests."
+  },
+  "bannerModeAsk": { "message": "Ask for access to each shop when I save a note" },
+  "bannerModeAll": { "message": "Give access to all sites once, so it never asks again" },
+  "bannerModeOff": { "message": "No banner, and never ask" },
+  "settingTab": {
+    "message": "Leave a small tab at the top of the shop after the banner is closed"
+  },
   "dataHeading": { "message": "Your data" },
   "dataExplain": {
     "message": "Your notes are kept in the browser's own sync storage and are never sent anywhere else."

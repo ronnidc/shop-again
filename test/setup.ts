@@ -17,6 +17,8 @@ beforeEach(() => {
     )) as typeof fakeBrowser.i18n.getMessage;
   fakeBrowser.permissions.contains = vi.fn(async () => false);
   fakeBrowser.permissions.request = vi.fn(async () => true);
+  fakeBrowser.permissions.remove = vi.fn(async () => true);
+  fakeBrowser.permissions.getAll = vi.fn(async () => ({ origins: [], permissions: [] }));
   fakeBrowser.permissions.onAdded.addListener = vi.fn();
   fakeBrowser.permissions.onRemoved.addListener = vi.fn();
 });

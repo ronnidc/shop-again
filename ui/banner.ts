@@ -1,4 +1,5 @@
 import type { Standing } from '@/core/model';
+import { coversSomething } from './clear-spot';
 import { h } from './dom';
 import { icon } from './icons';
 
@@ -18,8 +19,10 @@ export interface BannerContent {
 export interface BannerOptions {
   content: BannerContent;
   css: string;
-  /** Start as the small tab, for a shop already seen this session. */
+  /** Start out of the way, for a shop already seen this session. */
   collapsed: boolean;
+  /** Leave a small tab that brings the bar back. Without it only the line stays. */
+  tab: boolean;
   /** Called once, the first time the bar gets out of the way. */
   onCollapse(): void;
 }
@@ -29,7 +32,10 @@ export interface BannerOptions {
 const GOOD_NEWS_MS = 6000;
 const SCROLL_PX = 120;
 
-export function mountBanner({ content, css, collapsed, onCollapse }: BannerOptions): HTMLElement {
+/** Where the tab can sit, tried in this order. */
+const PLACES = ['end', 'center', 'start'] as const;
+
+export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse }: BannerOptions): HTMLElement {
   const host = document.createElement('shop-again-banner');
   // Closed, so the shop's own scripts and styles cannot reach in.
   const shadow = host.attachShadow({ mode: 'closed' });
@@ -42,7 +48,14 @@ export function mountBanner({ content, css, collapsed, onCollapse }: BannerOptio
   );
   const tab = h(
     'button',
-    { type: 'button', class: 'tab', title: content.showLabel, 'aria-label': content.showLabel, onclick: expand },
+    {
+      type: 'button',
+      class: 'tab',
+      hidden: true,
+      title: content.showLabel,
+      'aria-label': content.showLabel,
+      onclick: expand,
+    },
     icon(content.standing),
   );
   const root = h(
@@ -76,7 +89,7 @@ export function mountBanner({ content, css, collapsed, onCollapse }: BannerOptio
   function collapse() {
     const hadFocus = shadow.activeElement === close;
     root.dataset.state = 'collapsed';
-    if (hadFocus) tab.focus();
+    if (placeTab() && hadFocus) tab.focus();
     clearTimeout(timer);
     window.removeEventListener('scroll', onScroll);
     if (reported) return;
@@ -89,9 +102,29 @@ export function mountBanner({ content, css, collapsed, onCollapse }: BannerOptio
     close.focus();
   }
 
+  /**
+   * Puts the tab where it covers none of the shop's own menus and buttons,
+   * trying the end, the middle and the start of the top edge. It is probed
+   * unseen, so the page does not flicker. Without a free spot the line alone
+   * stays, and the toolbar button still leads to the notes.
+   */
+  function placeTab(): boolean {
+    if (!wantTab) return false;
+    tab.style.visibility = 'hidden';
+    tab.hidden = false;
+    const place = PLACES.find((candidate) => {
+      tab.dataset.place = candidate;
+      return !coversSomething(tab.getBoundingClientRect());
+    });
+    tab.hidden = place === undefined;
+    tab.style.visibility = '';
+    return place !== undefined;
+  }
+
   // On the root element and not in the body, where a shop's layout could move
   // or clip it.
   document.documentElement.append(host);
+  if (collapsed) placeTab();
   return host;
 }
 

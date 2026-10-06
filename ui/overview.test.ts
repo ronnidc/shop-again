@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { Shop } from '@/core/model';
 import { toExportFile } from '@/core/transfer';
-import { loadSettings, loadShop, saveShops } from '@/platform/store';
+import { DEFAULT_SETTINGS, loadSettings, loadShop, saveShops } from '@/platform/store';
 import { mountOverview } from './overview';
 
 const slowShop: Shop = {
@@ -113,6 +113,9 @@ describe('banner access', () => {
 });
 
 describe('settings', () => {
+  const mode = (page: HTMLElement, value: string) =>
+    page.querySelector<HTMLInputElement>(`input[name="banner"][value="${value}"]`)!;
+
   it('turns the right-click menu off', async () => {
     const page = await mount();
     const box = page.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
@@ -121,7 +124,48 @@ describe('settings', () => {
     box.click();
     await settle();
 
-    expect(await loadSettings()).toEqual({ contextMenu: false });
+    expect(await loadSettings()).toEqual({ ...DEFAULT_SETTINGS, contextMenu: false });
+  });
+
+  it('turns the tab off', async () => {
+    const page = await mount();
+    page.querySelector<HTMLInputElement>('input[name="tab"]')!.click();
+    await settle();
+    expect((await loadSettings()).tab).toBe(false);
+  });
+
+  it('asks shop by shop to begin with', async () => {
+    const page = await mount();
+    expect(mode(page, 'ask').checked).toBe(true);
+  });
+
+  it('gives access to every site once when that is chosen, and stays as it was when refused', async () => {
+    fakeBrowser.permissions.request = vi.fn(async () => false);
+    const page = await mount();
+
+    mode(page, 'all').click();
+    await settle();
+    expect(fakeBrowser.permissions.request).toHaveBeenCalledWith({ origins: ['*://*/*'] });
+    expect((await loadSettings()).banner).toBe('ask');
+    expect(mode(page, 'ask').checked).toBe(true);
+
+    fakeBrowser.permissions.request = vi.fn(async () => true);
+    mode(page, 'all').click();
+    await settle();
+    expect((await loadSettings()).banner).toBe('all');
+  });
+
+  it('gives every site back when the banner is turned off, and stops offering it', async () => {
+    fakeBrowser.permissions.getAll = vi.fn(async () => ({ origins: ['*://*.av-cables.dk/*'], permissions: [] }));
+    const page = await mount();
+    expect(page.textContent).toContain('Shops without a banner on this computer');
+
+    mode(page, 'off').click();
+    await settle();
+
+    expect(fakeBrowser.permissions.remove).toHaveBeenCalledWith({ origins: ['*://*.av-cables.dk/*'] });
+    expect((await loadSettings()).banner).toBe('off');
+    expect(page.textContent).not.toContain('Shops without a banner on this computer');
   });
 });
 

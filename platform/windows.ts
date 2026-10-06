@@ -1,5 +1,10 @@
 import { browser } from './browser';
 
+/** The overview page, which also holds the settings. */
+export function openSettings(): Promise<void> {
+  return browser.runtime.openOptionsPage();
+}
+
 /**
  * Opens the note form in a small window of its own. Unlike the toolbar popup,
  * a window stays open when the user looks at something else, and it can show a

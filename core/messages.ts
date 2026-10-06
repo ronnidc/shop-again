@@ -10,4 +10,6 @@ export interface BannerData {
   summary: Summary;
   /** The shop was already seen in this browser session, so start out small. */
   collapsed: boolean;
+  /** Leave a small tab after the banner is closed, as set by the user. */
+  tab: boolean;
 }

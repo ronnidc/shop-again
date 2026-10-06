@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mountBanner, type BannerContent } from './banner';
+import { mountBanner, type BannerContent, type BannerOptions } from './banner';
 
 const content = (standing: BannerContent['standing']): BannerContent => ({
   standing,
@@ -8,6 +8,15 @@ const content = (standing: BannerContent['standing']): BannerContent => ({
   brand: 'Shop Again?',
   hideLabel: 'Hide',
   showLabel: 'Show your notes about this shop',
+});
+
+const options = (overrides: Partial<BannerOptions> = {}): BannerOptions => ({
+  content: content('bad'),
+  css: '',
+  collapsed: false,
+  tab: true,
+  onCollapse: vi.fn(),
+  ...overrides,
 });
 
 function scrollTo(y: number) {
@@ -19,6 +28,7 @@ describe('mountBanner', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     scrollTo(0);
+    document.elementFromPoint = vi.fn(() => null);
   });
 
   afterEach(() => {
@@ -27,14 +37,14 @@ describe('mountBanner', () => {
   });
 
   it('adds one element to the page and keeps its inside closed to the page', () => {
-    const host = mountBanner({ content: content('bad'), css: '', collapsed: false, onCollapse: vi.fn() });
+    const host = mountBanner(options());
     expect(host.parentElement).toBe(document.documentElement);
     expect(host.shadowRoot).toBeNull();
   });
 
   it('keeps a warning up until the user scrolls on, and reports that once', () => {
     const onCollapse = vi.fn();
-    mountBanner({ content: content('bad'), css: '', collapsed: false, onCollapse });
+    mountBanner(options({ onCollapse }));
 
     vi.advanceTimersByTime(60_000);
     scrollTo(40);
@@ -47,7 +57,7 @@ describe('mountBanner', () => {
 
   it('gets good news out of the way by itself', () => {
     const onCollapse = vi.fn();
-    mountBanner({ content: content('good'), css: '', collapsed: false, onCollapse });
+    mountBanner(options({ content: content('good'), onCollapse }));
 
     vi.advanceTimersByTime(5_000);
     expect(onCollapse).not.toHaveBeenCalled();
@@ -57,10 +67,23 @@ describe('mountBanner', () => {
 
   it('stays quiet for a shop that was already seen this session', () => {
     const onCollapse = vi.fn();
-    mountBanner({ content: content('good'), css: '', collapsed: true, onCollapse });
+    mountBanner(options({ collapsed: true, onCollapse }));
 
     vi.advanceTimersByTime(60_000);
     scrollTo(800);
     expect(onCollapse).not.toHaveBeenCalled();
+  });
+
+  it('looks for a free spot for the tab once the bar is out of the way', () => {
+    mountBanner(options());
+    expect(document.elementFromPoint).not.toHaveBeenCalled();
+
+    scrollTo(800);
+    expect(document.elementFromPoint).toHaveBeenCalled();
+  });
+
+  it('does not look for a spot when the user wants no tab', () => {
+    mountBanner(options({ collapsed: true, tab: false }));
+    expect(document.elementFromPoint).not.toHaveBeenCalled();
   });
 });

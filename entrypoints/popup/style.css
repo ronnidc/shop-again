@@ -1,6 +1,6 @@
 body {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-2);
   /* Firefox makes the popup as wide as its content can get, so without a set
      width it grows and shrinks with what the form shows. */
   inline-size: 360px;
@@ -18,31 +18,26 @@ body {
   display: none;
 }
 
+/* One line, so the footer costs the form as little height as possible. */
 footer {
-  display: grid;
-  gap: var(--space-2);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
   padding-block-start: var(--space-3);
   border-block-start: 1px solid var(--border);
 }
 
-.other-shop summary {
-  color: LinkText;
-  cursor: pointer;
+footer .link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
-.other-shop form {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-2);
-  margin-block-start: var(--space-2);
+footer .link:last-child {
+  margin-inline-start: auto;
 }
 
-.other-shop input {
-  min-inline-size: 0;
-}
-
-.links {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-3);
+footer .icon {
+  inline-size: 1.1em;
+  block-size: 1.1em;
 }

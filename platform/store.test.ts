@@ -3,6 +3,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { Draft, Shop } from '@/core/model';
 import {
   clearDraft,
+  DEFAULT_SETTINGS,
   loadDraft,
   loadDraftDomains,
   loadSettings,
@@ -35,17 +36,22 @@ describe('shops', () => {
   });
 
   it('saves several shops in one write and keeps settings out of the list', async () => {
-    await saveSettings({ contextMenu: false });
+    await saveSettings({ ...DEFAULT_SETTINGS, contextMenu: false });
     await saveShops({ 'one.dk': shop, 'two.dk': shop });
     expect(Object.keys(await loadShops())).toEqual(['one.dk', 'two.dk']);
   });
 });
 
 describe('settings', () => {
-  it('shows the right-click menu until it is turned off', async () => {
-    expect(await loadSettings()).toEqual({ contextMenu: true });
-    await saveSettings({ contextMenu: false });
-    expect(await loadSettings()).toEqual({ contextMenu: false });
+  it('shows the menu, the tab and asks shop by shop until told otherwise', async () => {
+    expect(await loadSettings()).toEqual({ contextMenu: true, banner: 'ask', tab: true });
+    await saveSettings({ contextMenu: false, banner: 'off', tab: false });
+    expect(await loadSettings()).toEqual({ contextMenu: false, banner: 'off', tab: false });
+  });
+
+  it('falls back to asking when the stored banner mode is unknown', async () => {
+    await fakeBrowser.storage.sync.set({ settings: { banner: 'sometimes' } });
+    expect((await loadSettings()).banner).toBe('ask');
   });
 });
 
@@ -84,7 +90,7 @@ describe('onStoreChange', () => {
       settingsChanged: false,
     });
 
-    await saveSettings({ contextMenu: false });
+    await saveSettings({ ...DEFAULT_SETTINGS, contextMenu: false });
     expect(listener).toHaveBeenLastCalledWith({
       removedShops: [],
       shopsChanged: false,

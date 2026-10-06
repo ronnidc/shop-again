@@ -12,8 +12,9 @@ import {
 } from '@/core/model';
 import { TAGS, tagsFor } from '@/core/tags';
 import { formatDay, monthName, t, tagLabel } from '@/platform/i18n';
-import { hasBanner, requestBanner } from '@/platform/permissions';
-import { clearDraft, loadDraft, loadShop, saveDraft, saveShop } from '@/platform/store';
+import { askForBanner, hasBanner } from '@/platform/permissions';
+import { clearDraft, loadDraft, loadSettings, loadShop, saveDraft, saveShop } from '@/platform/store';
+import { openSettings } from '@/platform/windows';
 import { fill, h } from './dom';
 import { icon } from './icons';
 import { standingLabel, summaryText } from './labels';
@@ -33,7 +34,9 @@ const YEARS_BACK = 10;
  */
 export async function mountShopView(container: HTMLElement, domain: string): Promise<void> {
   let [shop, banner] = await Promise.all([loadShop(domain), hasBanner(domain)]);
-  const unfinished = await loadDraft(domain);
+  const [unfinished, settings] = await Promise.all([loadDraft(domain), loadSettings()]);
+  /** Whether saving or the notice will make the browser ask for access. */
+  const willAsk = () => !banner && settings.banner !== 'off';
   let mode: Mode = unfinished
     ? {
         kind: 'form',
@@ -73,7 +76,7 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
             )
           : h('p', { class: 'muted' }, t('shopNoNotes')),
       ),
-      summary && !banner && bannerNotice(),
+      summary && willAsk() && bannerNotice(),
       mode.kind === 'form' ? entryForm(mode.entry, mode.draft) : entryList(),
     );
   }
@@ -81,7 +84,7 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
   function bannerNotice() {
     // A click handler, so the permission prompt is allowed to open.
     const turnOn = () => {
-      void requestBanner([domain]).then((granted) => {
+      void askForBanner(settings.banner, domain).then((granted) => {
         banner = granted;
         render();
       });
@@ -237,7 +240,7 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
       // prompt needs the click that is still in progress.
       const saving = saveShop(domain, next);
       void clearDraft(domain);
-      const asking = requestBanner([domain]);
+      const asking = askForBanner(settings.banner, domain);
       void saving.then(
         async () => {
           shop = next;
@@ -283,6 +286,16 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
       ),
       dateFields(start.date),
       error,
+      // The browser's own prompt says what access would allow, not what it is
+      // for. This says so first, and leads to the setting that stops the asking.
+      willAsk() &&
+        h(
+          'p',
+          { class: 'muted access-note' },
+          t(settings.banner === 'all' ? 'accessAskAll' : 'accessAskShop', domain),
+          ' ',
+          h('button', { type: 'button', class: 'link', onclick: () => void openSettings() }, t('settingsHeading')),
+        ),
       h(
         'div',
         { class: 'actions' },

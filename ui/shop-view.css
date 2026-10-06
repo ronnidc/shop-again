@@ -1,13 +1,15 @@
+/* Both browsers cap a toolbar popup at 600px, whatever the screen, so the
+   form is kept tight enough to fit under that with the longest tag list. */
 .shop-view,
 .entry-list,
 .entry-form {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .shop-head {
   display: grid;
-  gap: var(--space-1);
+  gap: 2px;
 }
 
 .shop-head h2 {
@@ -48,7 +50,7 @@
 
 .entry-form legend,
 .field span {
-  margin-block-end: var(--space-1);
+  margin-block-end: 2px;
   font-weight: 600;
 }
 
@@ -74,7 +76,8 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-3);
+  padding-block: 10px;
+  padding-inline: var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   font-weight: 600;
