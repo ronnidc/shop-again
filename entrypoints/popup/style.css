@@ -31,4 +31,7 @@ footer .link {
 footer .icon {
   inline-size: 1.1em;
   block-size: 1.1em;
+  /* Centered on the line box, the icon sits a touch above the middle of the
+     letters, which is lower because of the descenders. */
+  translate: 0 1.5px;
 }
