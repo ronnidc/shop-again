@@ -5,7 +5,7 @@ import { browser } from '@/platform/browser';
 import { t } from '@/platform/i18n';
 import { hasBanner, onBannerAccessChange, releaseBanner } from '@/platform/permissions';
 import { loadSettings, loadShop, loadShops, onStoreChange } from '@/platform/store';
-import { openNoteWindow } from '@/platform/windows';
+import { openSettings, openShopPage } from '@/platform/windows';
 
 const BANNER_SCRIPT = 'banner';
 const MENU_PAGE = 'note-page';
@@ -82,9 +82,8 @@ function openNoteFromMenu(
   tab?: { url?: string },
 ) {
   const address = info.menuItemId === MENU_LINK ? info.linkUrl : (info.pageUrl ?? tab?.url);
-  // The toolbar popup only knows the active tab, and a link can point at
-  // another shop, so the note opens in a window.
-  void openNoteWindow(address ? shopKey(address) : null);
+  const domain = address ? shopKey(address) : null;
+  void (domain ? openShopPage(domain) : openSettings());
 }
 
 function answer(

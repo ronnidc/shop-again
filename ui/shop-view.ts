@@ -233,6 +233,8 @@ export async function mountShopView(container: HTMLElement, domain: string): Pro
         verdict: filled.verdict,
         tags: [...filled.tags, ...unknownTags(entry)],
         ...(note && { note }),
+        // An edit keeps the time the entry was first written.
+        ...(entry ? entry.added && { added: entry.added } : { added: new Date().toISOString() }),
       });
 
       // All three calls are made before anything is awaited. The save is then

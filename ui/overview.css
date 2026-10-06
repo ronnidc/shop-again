@@ -46,12 +46,19 @@ section > h2 {
 
 .add-shop {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr auto;
   gap: var(--space-1) var(--space-2);
+  max-inline-size: 560px;
+  margin-block-start: var(--space-2);
+}
+
+.add-shop label,
+.add-shop .error {
+  grid-column: 1 / -1;
 }
 
 .add-shop label {
-  grid-column: 1 / -1;
+  font-weight: 600;
 }
 
 .shops {

@@ -6,16 +6,11 @@ export function openSettings(): Promise<void> {
 }
 
 /**
- * Opens the note form in a small window of its own. Unlike the toolbar popup,
- * a window stays open when the user looks at something else, and it can show a
- * shop other than the one in the active tab.
+ * The overview page with one shop's notes opened in its dialog. A tab of its
+ * own, because the toolbar popup only knows the active tab and closes as soon
+ * as the user looks elsewhere.
  */
-export function openNoteWindow(domain: string | null): Promise<unknown> {
-  const query = new URLSearchParams({ window: '1', ...(domain && { domain }) });
-  return browser.windows.create({
-    url: `${browser.runtime.getURL('/popup.html')}?${query}`,
-    type: 'popup',
-    width: 400,
-    height: 700,
-  });
+export function openShopPage(domain: string): Promise<unknown> {
+  const query = new URLSearchParams({ domain });
+  return browser.tabs.create({ url: `${browser.runtime.getURL('/options.html')}?${query}` });
 }

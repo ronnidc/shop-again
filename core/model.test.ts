@@ -44,7 +44,15 @@ describe('summarize', () => {
 });
 
 describe('byNewest', () => {
-  it('puts the last added first among entries from the same day', () => {
+  it('orders entries from the same day by when they were written', () => {
+    const sorted = byNewest([
+      entry({ id: 'later', added: '2026-10-06T10:00:00.000Z' }),
+      entry({ id: 'earlier', added: '2026-10-06T09:00:00.000Z' }),
+    ]);
+    expect(sorted.map((item) => item.id)).toEqual(['later', 'earlier']);
+  });
+
+  it('puts the last added first among entries without a timestamp', () => {
     const sorted = byNewest([entry({ id: 'first' }), entry({ id: 'second' })]);
     expect(sorted.map((item) => item.id)).toEqual(['second', 'first']);
   });

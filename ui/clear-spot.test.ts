@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { coversSomething, isInteractive, probePoints } from './clear-spot';
+import { coversSomething, isInteractive, isOccupied, probePoints } from './clear-spot';
 import { h } from './dom';
 
 describe('isInteractive', () => {
@@ -30,6 +30,22 @@ describe('isInteractive', () => {
     expect(isInteractive(h('p', {}, 'Just text'))).toBe(false);
     expect(isInteractive(document.body)).toBe(false);
     expect(isInteractive(null)).toBe(false);
+  });
+});
+
+describe('isOccupied', () => {
+  it('counts text, images and clickable things', () => {
+    expect(isOccupied(h('span', {}, 'Nyheder'))).toBe(true);
+    expect(isOccupied(h('img', { src: 'logo.png' }))).toBe(true);
+    expect(isOccupied(document.createElementNS('http://www.w3.org/2000/svg', 'path'))).toBe(true);
+    expect(isOccupied(h('a', { href: '/' }))).toBe(true);
+  });
+
+  it('treats a wrapper with only elements inside, and the page itself, as a gap', () => {
+    expect(isOccupied(h('div', {}, h('span', {}, 'Inside')))).toBe(false);
+    expect(isOccupied(h('header', {}, ' \n '))).toBe(false);
+    expect(isOccupied(document.body)).toBe(false);
+    expect(isOccupied(null)).toBe(false);
   });
 });
 

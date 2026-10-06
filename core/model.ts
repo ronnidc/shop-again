@@ -11,6 +11,8 @@ export interface Entry {
   /** Tag codes from `core/tags.ts`. */
   tags: string[];
   note?: string;
+  /** When the entry was written, as an ISO timestamp. Orders entries from the same day. */
+  added?: string;
 }
 
 export interface Shop {
@@ -62,12 +64,17 @@ function isoDate(year: number, month: number, day: number): string {
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
-/** Newest first. Entries on the same day keep the latest added on top. */
+/** Newest first: by the day of the experience, then by when the entry was written. */
 export function byNewest(entries: Entry[]): Entry[] {
   return entries
     .map((entry, index) => ({ entry, index }))
-    .sort((a, b) => b.entry.date.localeCompare(a.entry.date) || b.index - a.index)
+    .sort((a, b) => compareNewest(a.entry, b.entry) || b.index - a.index)
     .map(({ entry }) => entry);
+}
+
+/** Negative when `a` is the newer entry. */
+export function compareNewest(a: Entry, b: Entry): number {
+  return b.date.localeCompare(a.date) || (b.added ?? '').localeCompare(a.added ?? '');
 }
 
 export function summarize(shop: Shop): Summary | null {
@@ -119,6 +126,7 @@ function parseEntry(value: unknown): Entry | null {
   if (typeof note === 'string' && note.trim()) {
     entry.note = note.trim().slice(0, NOTE_MAX_LENGTH);
   }
+  if (typeof value.added === 'string') entry.added = value.added;
   return entry;
 }
 

@@ -52,10 +52,9 @@
   },
   "bannerTurnOn": { "message": "Turn on" },
   "otherShopPlaceholder": { "message": "shop.com or a link" },
-  "otherShopOpen": { "message": "Open" },
+  "addShopButton": { "message": "Add" },
   "otherShopInvalid": { "message": "That does not look like a shop address." },
   "allShops": { "message": "All shops" },
-  "openInWindow": { "message": "Open in a window" },
   "draftElsewhere": { "message": "You have an unfinished note about $1." },
   "draftContinue": { "message": "Continue" },
 

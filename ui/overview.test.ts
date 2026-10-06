@@ -51,6 +51,17 @@ describe('the list of shops', () => {
     expect(shopNames(page)).toEqual(['bilka.dk', 'av-cables.dk']);
   });
 
+  it('puts the shop written last on top among shops from the same day', async () => {
+    const sameDay = (added: string): Shop => ({
+      entries: [{ id: added, date: '2026-10-06', verdict: 'good', tags: [], added }],
+    });
+    const page = await mount({
+      'first.dk': sameDay('2026-10-06T09:00:00.000Z'),
+      'second.dk': sameDay('2026-10-06T10:00:00.000Z'),
+    });
+    expect(shopNames(page)).toEqual(['second.dk', 'first.dk']);
+  });
+
   it('searches in names, tags and notes, and filters by standing', async () => {
     const page = await mount();
 
@@ -71,6 +82,17 @@ describe('the list of shops', () => {
     await saveShops({ 'new-shop.dk': fastShop });
     await settle();
     expect(shopNames(page)).toContain('new-shop.dk');
+  });
+
+  it('opens the shop it was asked to open, as the right-click menu does', async () => {
+    await saveShops({ 'av-cables.dk': slowShop });
+    document.body.replaceChildren();
+    mountOverview(document.body, { open: 'https://www.av-cables.dk/ordre/42' });
+    await settle();
+
+    const dialog = document.body.querySelector('dialog')!;
+    expect(dialog.open).toBe(true);
+    expect(dialog.querySelector('h2')!.textContent).toBe('av-cables.dk');
   });
 
   it('opens a shop in the dialog', async () => {
@@ -96,6 +118,24 @@ describe('the list of shops', () => {
     add('https://www.proshop.dk/kabler');
     await settle();
     expect(page.querySelector('dialog h2')!.textContent).toBe('proshop.dk');
+  });
+
+  it('brings a shop added by address into view once its note is saved', async () => {
+    const page = await mount();
+    page.querySelector<HTMLInputElement>('#add-shop')!.value = 'proshop.dk';
+    page.querySelector('form.add-shop')!.dispatchEvent(new Event('submit', { cancelable: true }));
+    await settle();
+
+    const dialog = page.querySelector('dialog')!;
+    dialog.querySelector<HTMLInputElement>('input[value="good"]')!.click();
+    dialog.querySelector('form.entry-form')!.dispatchEvent(new Event('submit', { cancelable: true }));
+    await settle();
+    dialog.close();
+    await settle();
+    await settle();
+
+    expect(shopNames(page)[0]).toBe('proshop.dk');
+    expect(document.activeElement?.textContent).toContain('proshop.dk');
   });
 });
 

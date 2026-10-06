@@ -1,5 +1,5 @@
 import { shopKey } from '@/core/domain';
-import { summarize, today, type Shop, type Summary } from '@/core/model';
+import { compareNewest, summarize, today, type Shop, type Summary } from '@/core/model';
 import { mergeShop, parseExportFile, toExportFile } from '@/core/transfer';
 import { formatMonth, t, tagLabel } from '@/platform/i18n';
 import {
@@ -38,13 +38,15 @@ const BANNER_MODES = {
  * The page with every shop the user has notes on: search and filter, one shop
  * opened in a dialog, the settings, and export and import.
  */
-export function mountOverview(root: HTMLElement): void {
+export function mountOverview(root: HTMLElement, { open = null }: { open?: string | null } = {}): void {
   let shops: Record<string, Shop> = {};
   /** Shops whose banner cannot show on this computer, because access was never given here. */
   let withoutBanner: string[] = [];
   let settings: Settings = DEFAULT_SETTINGS;
   let search = '';
   let filter: Filter = 'all';
+  /** A shop just added by address, to be shown in the list when the dialog closes. */
+  let added: string | null = null;
 
   const list = h('div', { class: 'shop-list' });
   const settingsSection = h('section', {});
@@ -74,12 +76,14 @@ export function mountOverview(root: HTMLElement): void {
   }
 
   function renderList() {
+    // The latest experience first, like a log. Shops from the same day follow
+    // the order they were written in, so a new one lands at the top.
     const rows = Object.entries(shops)
       .flatMap(([domain, shop]) => {
         const summary = summarize(shop);
         return summary && matches(domain, shop, summary) ? [{ domain, summary }] : [];
       })
-      .sort((a, b) => b.summary.latest.date.localeCompare(a.summary.latest.date));
+      .sort((a, b) => compareNewest(a.summary.latest, b.summary.latest) || a.domain.localeCompare(b.domain));
 
     // A click handler, so the permission prompt is allowed to open. One prompt
     // covers every shop on the list.
@@ -109,7 +113,7 @@ export function mountOverview(root: HTMLElement): void {
       {},
       h(
         'button',
-        { type: 'button', class: 'shop-row', onclick: () => void openShop(domain) },
+        { type: 'button', class: 'shop-row', 'data-domain': domain, onclick: () => void openShop(domain) },
         h(
           'span',
           { class: 'standing', 'data-standing': summary.standing },
@@ -128,7 +132,27 @@ export function mountOverview(root: HTMLElement): void {
     if (!dialog.open) dialog.showModal();
   }
 
-  function toolbar() {
+  /**
+   * The form sits under the list and a new shop lands at the top of it, so
+   * the list scrolls to the new row once the dialog closes.
+   */
+  function revealAdded() {
+    const domain = added;
+    added = null;
+    if (!domain) return;
+    void refresh().then(() => {
+      const row = list.querySelector<HTMLElement>(`.shop-row[data-domain="${CSS.escape(domain)}"]`);
+      row?.scrollIntoView({ block: 'nearest' });
+      row?.focus();
+    });
+  }
+  dialog.addEventListener('close', revealAdded);
+
+  /**
+   * Below the list, apart from the search, because it starts a new shop rather
+   * than finding one. A shop added here lands in the list by its date.
+   */
+  function addShopForm() {
     const error = h('p', { class: 'error', role: 'alert', hidden: true });
     const address = h('input', {
       id: 'add-shop',
@@ -144,8 +168,20 @@ export function mountOverview(root: HTMLElement): void {
       error.textContent = domain ? '' : t('otherShopInvalid');
       if (!domain) return;
       address.value = '';
+      added = domain;
       void openShop(domain);
     };
+    return h(
+      'form',
+      { class: 'add-shop', onsubmit: addShop },
+      h('label', { for: 'add-shop' }, t('addShopLabel')),
+      address,
+      h('button', { type: 'submit' }, t('addShopButton')),
+      error,
+    );
+  }
+
+  function toolbar() {
     const onSearch = (event: Event) => {
       search = (event.target as HTMLInputElement).value;
       renderList();
@@ -155,33 +191,23 @@ export function mountOverview(root: HTMLElement): void {
       renderList();
     };
 
-    return [
+    return h(
+      'div',
+      { class: 'toolbar' },
+      h('label', { class: 'grow' }, t('searchLabel'), h('input', { type: 'search', oninput: onSearch })),
       h(
-        'div',
-        { class: 'toolbar' },
-        h('label', { class: 'grow' }, t('searchLabel'), h('input', { type: 'search', oninput: onSearch })),
+        'label',
+        {},
+        t('filterLabel'),
         h(
-          'label',
-          {},
-          t('filterLabel'),
-          h(
-            'select',
-            { onchange: onFilter },
-            ...FILTERS.map((value) =>
-              h('option', { value }, value === 'all' ? t('filterAll') : standingLabel(value)),
-            ),
+          'select',
+          { onchange: onFilter },
+          ...FILTERS.map((value) =>
+            h('option', { value }, value === 'all' ? t('filterAll') : standingLabel(value)),
           ),
         ),
-        h(
-          'form',
-          { class: 'add-shop', onsubmit: addShop },
-          h('label', { for: 'add-shop' }, t('addShopLabel')),
-          address,
-          h('button', { type: 'submit' }, t('otherShopOpen')),
-        ),
       ),
-      error,
-    ];
+    );
   }
 
   function renderSettings() {
@@ -311,7 +337,7 @@ export function mountOverview(root: HTMLElement): void {
   fill(
     root,
     h('header', {}, h('h1', {}, t('extName')), h('p', { class: 'muted' }, t('optionsTagline'))),
-    h('main', {}, h('section', {}, ...toolbar(), list), settingsSection, dataSection()),
+    h('main', {}, h('section', {}, toolbar(), list, addShopForm()), settingsSection, dataSection()),
     dialog,
   );
 
@@ -320,4 +346,6 @@ export function mountOverview(root: HTMLElement): void {
   onStoreChange(() => void refresh());
   onBannerAccessChange(() => void refresh());
   void refresh();
+  const requested = open && shopKey(open);
+  if (requested) void openShop(requested);
 }

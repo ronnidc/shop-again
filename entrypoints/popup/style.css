@@ -10,10 +10,6 @@ body {
   padding: var(--space-4);
 }
 
-.standalone body {
-  inline-size: auto;
-}
-
 #drafts:empty {
   display: none;
 }
@@ -21,8 +17,7 @@ body {
 /* One line, so the footer costs the form as little height as possible. */
 footer {
   display: flex;
-  justify-content: space-between;
-  gap: var(--space-3);
+  justify-content: end;
   padding-block-start: var(--space-3);
   border-block-start: 1px solid var(--border);
 }
@@ -31,10 +26,6 @@ footer .link {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-}
-
-footer .link:last-child {
-  margin-inline-start: auto;
 }
 
 footer .icon {

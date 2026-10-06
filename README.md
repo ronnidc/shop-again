@@ -7,10 +7,10 @@ Not published yet.
 ## How it works
 
 - **The toolbar button** opens the notes for the shop in the active tab: its standing, earlier experiences, and a form with a verdict, a set of fixed reasons, an optional note and a date. A shop can also be added by its address on the overview page, or from a link with the right-click menu, because a bad experience usually shows days after the order.
-- **A note in progress is never lost.** A toolbar popup closes the moment it loses focus, so what is typed is kept as a draft for the rest of the browser session and is back when the popup is opened again, also from another tab. "Open in a window" moves the form to a window that stays open while the user looks something up.
+- **A note in progress is never lost.** A toolbar popup closes the moment it loses focus, so what is typed is kept as a draft for the rest of the browser session and is back when the popup is opened again, also from another tab.
 - **The banner** appears at the top of a shop the user has notes on. It is a full bar the first time in a browser session and after that a thin line with a tab that brings the bar back. The tab is placed where it covers none of the shop's own buttons, and can be turned off in the settings. Good news gets out of the way by itself, a warning stays until it is closed or scrolled past. The toolbar button carries the verdict as a badge.
 - **The overview page** (the extension's options page) lists every shop with search and a filter, and holds the settings, export and import.
-- **The right-click menu** opens the note form for the current shop or for the shop a link goes to. It can be turned off in the settings.
+- **The right-click menu** opens the overview page with the notes for the current shop, or for the shop a link goes to. It can be turned off in the settings.
 
 ## Decisions
 

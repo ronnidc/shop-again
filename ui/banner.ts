@@ -32,8 +32,11 @@ export interface BannerOptions {
 const GOOD_NEWS_MS = 6000;
 const SCROLL_PX = 120;
 
-/** Where the tab can sit, tried in this order. */
-const PLACES = ['end', 'center', 'start'] as const;
+/**
+ * Where the tab can sit along the top edge, as a share of the width, tried
+ * from the end inwards. Shop headers tend to have gaps between their parts.
+ */
+const PLACES = [0.96, 0.88, 0.8, 0.72, 0.64, 0.56, 0.5, 0.44, 0.36, 0.28, 0.2, 0.12, 0.04];
 
 export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse }: BannerOptions): HTMLElement {
   const host = document.createElement('shop-again-banner');
@@ -103,19 +106,25 @@ export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse 
   }
 
   /**
-   * Puts the tab where it covers none of the shop's own menus and buttons,
-   * trying the end, the middle and the start of the top edge. It is probed
-   * unseen, so the page does not flicker. Without a free spot the line alone
-   * stays, and the toolbar button still leads to the notes.
+   * Puts the tab in a gap along the top edge, where it covers none of the
+   * shop's own menus, buttons, text or images. It is probed unseen, so the
+   * page does not flicker. Without a free spot the line alone stays, and the
+   * toolbar button still leads to the notes.
    */
   function placeTab(): boolean {
     if (!wantTab) return false;
     tab.style.visibility = 'hidden';
     tab.hidden = false;
-    const place = PLACES.find((candidate) => {
-      tab.dataset.place = candidate;
-      return !coversSomething(tab.getBoundingClientRect());
-    });
+    let place: number | undefined;
+    try {
+      place = PLACES.find((share) => {
+        tab.style.insetInlineStart = `${share * 100}%`;
+        return !coversSomething(tab.getBoundingClientRect());
+      });
+    } catch {
+      // Probing touches the shop's own page. If that fails, no tab is better
+      // than a bar that never goes away.
+    }
     tab.hidden = place === undefined;
     tab.style.visibility = '';
     return place !== undefined;
