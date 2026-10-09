@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Screenshot frame</title>
+    <!-- Filled in by screenshots.mjs and rendered at 1280 by 800. -->
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        position: relative;
+        inline-size: 1280px;
+        block-size: 800px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #e6ecff 0%, #f6f7fb 50%, #dde6ff 100%);
+        color: #111827;
+        font-family: -apple-system, system-ui, 'Segoe UI', sans-serif;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding-block: 40px 0;
+        padding-inline: 64px;
+      }
+      header img {
+        inline-size: 48px;
+        block-size: 48px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      p {
+        margin-block: 6px 0;
+        margin-inline: 0;
+        font-size: 20px;
+        color: #4b5563;
+      }
+      .shot {
+        position: absolute;
+        inset-block-start: 160px;
+        inset-inline-start: 50%;
+        translate: -50% 0;
+        overflow: hidden;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow:
+          0 24px 60px rgba(30, 41, 59, 0.22),
+          0 2px 6px rgba(30, 41, 59, 0.12);
+      }
+      .shot img {
+        display: block;
+        inline-size: {{width}}px;
+      }
+      /* A whole page is shown a little narrower than the frame, so its edges
+         and shadow are visible, and runs off the bottom. */
+      .shot.page {
+        inset-block-start: 150px;
+      }
+      .shot.page img {
+        inline-size: 1180px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="{{icon}}" alt="" />
+      <div>
+        <h1>{{title}}</h1>
+        <p>{{subtitle}}</p>
+      </div>
+    </header>
+    <div class="shot {{kind}}"><img src="{{image}}" alt="" /></div>
+  </body>
+</html>

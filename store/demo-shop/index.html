@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bright Lamps</title>
+    <!-- A fictional shop for the store screenshots, served by screenshots.mjs.
+         Nothing here is a real shop or a real product. -->
+    <style>
+      :root {
+        --ink: #1c1917;
+        --muted: #78716c;
+        --line: #e7e5e4;
+        --accent: #b45309;
+        --accent-soft: #fef3c7;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #fff;
+        font-family: -apple-system, system-ui, 'Segoe UI', sans-serif;
+        font-size: 15px;
+        line-height: 1.4;
+      }
+      .topline {
+        padding-block: 8px;
+        text-align: center;
+        background: var(--ink);
+        color: #fff;
+        font-size: 13px;
+        letter-spacing: 0.02em;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        padding-block: 18px;
+        padding-inline: 64px;
+        border-block-end: 1px solid var(--line);
+      }
+      .logo {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+      .logo span {
+        color: var(--accent);
+      }
+      nav {
+        display: flex;
+        gap: 28px;
+        font-weight: 500;
+      }
+      nav a {
+        color: inherit;
+        text-decoration: none;
+      }
+      nav a.sale {
+        color: var(--accent);
+      }
+      .search {
+        flex: 1;
+        max-inline-size: 320px;
+        margin-inline-start: auto;
+        padding-block: 9px;
+        padding-inline: 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        background: #fafaf9;
+      }
+      .icons {
+        display: flex;
+        gap: 22px;
+        font-weight: 500;
+      }
+      .cart {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .cart b {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 20px;
+        block-size: 20px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        font-size: 12px;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 48px;
+        margin-block: 40px 0;
+        margin-inline: 64px;
+        padding: 56px;
+        border-radius: 24px;
+        background: linear-gradient(120deg, #fff7ed, #fde7c4);
+      }
+      .hero h1 {
+        margin: 0;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 48px;
+        font-weight: 400;
+        line-height: 1.1;
+      }
+      .hero p {
+        margin-block: 16px 24px;
+        margin-inline: 0;
+        max-inline-size: 420px;
+        font-size: 18px;
+        color: #57534e;
+      }
+      .button {
+        display: inline-block;
+        padding-block: 12px;
+        padding-inline: 22px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        font-weight: 600;
+      }
+      .hero svg {
+        display: block;
+        inline-size: 100%;
+        max-inline-size: 360px;
+        margin-inline: auto;
+      }
+      h2 {
+        margin-block: 44px 20px;
+        margin-inline: 64px;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 28px;
+        font-weight: 400;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-inline: 64px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .card .art {
+        display: grid;
+        place-items: center;
+        block-size: 220px;
+      }
+      .card .art svg {
+        inline-size: 140px;
+      }
+      .card .body {
+        padding-block: 14px 16px;
+        padding-inline: 16px;
+      }
+      .card h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .price {
+        margin-block: 4px 8px;
+        font-size: 17px;
+      }
+      .stock {
+        display: inline-block;
+        padding-block: 3px;
+        padding-inline: 10px;
+        border-radius: 999px;
+        background: #dcfce7;
+        color: #166534;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      footer {
+        margin-block-start: 48px;
+        padding-block: 28px;
+        padding-inline: 64px;
+        border-block-start: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topline">Free shipping on orders over €60 · Order before 15:00 and we ship today</div>
+    <header>
+      <div class="logo">Bright<span>Lamps</span></div>
+      <nav>
+        <a href="#">Table lamps</a>
+        <a href="#">Floor lamps</a>
+        <a href="#">Pendants</a>
+        <a href="#">Bulbs</a>
+        <a href="#" class="sale">Sale</a>
+      </nav>
+      <div class="search">Search lamps, bulbs, shades</div>
+      <div class="icons"><span>Account</span><span class="cart">Cart <b>2</b></span></div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>Autumn light for long evenings</h1>
+        <p>New table and floor lamps in warm brass and linen, with bulbs that dim all the way down.</p>
+        <span class="button">Shop the collection</span>
+      </div>
+      <svg viewBox="0 0 240 240" aria-hidden="true">
+        <path d="M70 40h100l30 90H40z" fill="#f5deb3" />
+        <path d="M70 40h100l30 90H40z" fill="none" stroke="#c99a5b" stroke-width="3" />
+        <rect x="114" y="130" width="12" height="60" fill="#8a6a3f" />
+        <ellipse cx="120" cy="196" rx="44" ry="10" fill="#8a6a3f" />
+        <ellipse cx="120" cy="130" rx="80" ry="8" fill="#fff4d6" opacity="0.8" />
+      </svg>
+    </section>
+
+    <h2>Bestsellers this week</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="art" style="background: #fef3c7">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M35 20h50l15 45H20z" fill="#fbbf24" />
+            <rect x="57" y="65" width="6" height="34" fill="#78350f" />
+            <ellipse cx="60" cy="102" rx="24" ry="5" fill="#78350f" />
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Linen table lamp</h3>
+          <div class="price">€89</div>
+          <span class="stock">In stock, ships today</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="art" style="background: #e0f2fe">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M40 12h40l10 30H30z" fill="#0ea5e9" />
+            <rect x="57" y="42" width="6" height="58" fill="#334155" />
+            <ellipse cx="60" cy="104" rx="26" ry="5" fill="#334155" />
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Arc floor lamp</h3>
+          <div class="price">€249</div>
+          <span class="stock">In stock, ships today</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="art" style="background: #fce7f3">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <rect x="58" y="8" width="4" height="30" fill="#4a044e" />
+            <path d="M30 38h60l-8 36H38z" fill="#ec4899" />
+            <ellipse cx="60" cy="74" rx="22" ry="4" fill="#fbcfe8" />
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Pleated pendant</h3>
+          <div class="price">€129</div>
+          <span class="stock">In stock, ships today</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="art" style="background: #ecfccb">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <path d="M60 16c-20 0-30 14-30 30 0 12 8 18 12 26h36c4-8 12-14 12-26 0-16-10-30-30-30z" fill="#fde68a" />
+            <rect x="48" y="72" width="24" height="10" fill="#a3a3a3" />
+            <rect x="52" y="82" width="16" height="8" fill="#737373" />
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Dimmable bulb, 3-pack</h3>
+          <div class="price">€24</div>
+          <span class="stock">In stock, ships today</span>
+        </div>
+      </div>
+    </div>
+
+    <footer>Bright Lamps is a fictional shop. © Bright Lamps · Terms · Privacy · Contact</footer>
+  </body>
+</html>

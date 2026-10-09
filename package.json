@@ -2,7 +2,7 @@
   "name": "shop-again",
   "description": "Browser extension that remembers your own experiences with web shops and reminds you when you come back",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "engines": {
     "node": ">=22"

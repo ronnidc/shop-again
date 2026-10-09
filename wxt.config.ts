@@ -14,10 +14,17 @@ export default defineConfig({
       }),
     },
   },
+  zip: {
+    // Mozilla's reviewers rebuild the extension from the sources zip, so it
+    // carries the Node version and leaves out the store material.
+    includeSources: ['**/*', '.nvmrc'],
+    excludeSources: ['store/**'],
+  },
   manifest: ({ browser, mode }) => ({
     name: '__MSG_extName__',
     description: '__MSG_extDescription__',
     default_locale: 'en',
+    homepage_url: 'https://github.com/ronnidc/shop-again',
     permissions: ['storage', 'activeTab', 'scripting', 'contextMenus'],
     // No site access at install. The user gives access to one shop at a time,
     // which is what lets the banner show there.
