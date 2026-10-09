@@ -89,7 +89,7 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 
 ## Before the first upload
 
-- The name. ShopAgain (shopagain.io, Cary, North Carolina) is a retention marketing platform for Shopify stores, founded 2021, and there are smaller shops of the same name. The products and the audiences differ, and the question mark is part of this name, but the words are the same, and a store takes a trademark complaint seriously. Decide with that in mind, and if the name stays, keep the question mark everywhere the name is written.
+- The name is "Shop Again?", decided 2026-10-09. The question mark goes wherever the name is written for people: listings, texts, images and the extension's own pages. Identifiers carry none of it: `shop-again` in the package name, the add-on ID, the export file name and the repository. The closest trademark is SHOPAGAIN, US registration 7253456 (LatticeAI Inc., classes 35 and 42, registered 2023-12-26), a retention marketing platform for Shopify stores. Its app left the Shopify App Store in July 2025, its sites are down, and its North Carolina registration was revoked in November 2024, so a complaint is not expected. The registration itself stands until its maintenance filing falls due in 2029, so the name cannot be registered in the US before then. The other marks with the words are an Italian E-SHOPAGAIN from 2001 and a French second-hand retail chain from 2023.
 - The repository has to be public, or the privacy policy and the homepage need another address.
 - A license file in the repository, MIT is the obvious one, because Firefox asks for one and a public repository needs one.
 - Rendered icons in `public/icon/` from `icons.sh`, not the WXT placeholders.
