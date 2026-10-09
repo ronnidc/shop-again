@@ -11,6 +11,20 @@ h1 {
   font-size: 24px;
 }
 
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* The icon carries its own white square, so it sits the same on light and dark. */
+.logo {
+  flex: none;
+  inline-size: 56px;
+  block-size: 56px;
+  border-radius: 12px;
+}
+
 main,
 section,
 .shop-list {

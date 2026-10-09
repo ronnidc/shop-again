@@ -158,7 +158,7 @@ describe('settings', () => {
 
   it('turns the right-click menu off', async () => {
     const page = await mount();
-    const box = page.querySelector<HTMLInputElement>('input[type="checkbox"]')!;
+    const box = page.querySelector<HTMLInputElement>('input[name="contextMenu"]')!;
     expect(box.checked).toBe(true);
 
     box.click();

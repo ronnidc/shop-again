@@ -223,12 +223,6 @@ export function mountOverview(root: HTMLElement, { open = null }: { open?: strin
       settingsSection,
       h('h2', {}, t('settingsHeading')),
       h(
-        'label',
-        { class: 'check' },
-        h('input', { type: 'checkbox', checked: settings.contextMenu, onchange: toggleMenu }),
-        t('settingContextMenu'),
-      ),
-      h(
         'fieldset',
         { class: 'banner-modes' },
         h('legend', {}, t('settingsBannerHeading')),
@@ -253,6 +247,13 @@ export function mountOverview(root: HTMLElement, { open = null }: { open?: strin
           h('input', { type: 'checkbox', name: 'tab', checked: settings.tab, onchange: toggleTab }),
           t('settingTab'),
         ),
+      ),
+      // Last, right before the data section: the banner is the setting people come for.
+      h(
+        'label',
+        { class: 'check' },
+        h('input', { type: 'checkbox', name: 'contextMenu', checked: settings.contextMenu, onchange: toggleMenu }),
+        t('settingContextMenu'),
       ),
     );
   }
@@ -336,7 +337,12 @@ export function mountOverview(root: HTMLElement, { open = null }: { open?: strin
 
   fill(
     root,
-    h('header', {}, h('h1', {}, t('extName')), h('p', { class: 'muted' }, t('optionsTagline'))),
+    h(
+      'header',
+      { class: 'masthead' },
+      h('img', { class: 'logo', src: 'icon/128.png', alt: '' }),
+      h('div', {}, h('h1', {}, t('extName')), h('p', { class: 'muted' }, t('optionsTagline'))),
+    ),
     h('main', {}, h('section', {}, toolbar(), list, addShopForm()), settingsSection, dataSection()),
     dialog,
   );
