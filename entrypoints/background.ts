@@ -88,13 +88,17 @@ function openNoteFromMenu(
 
 function answer(
   message: Message,
-  sender: { url?: string; tab?: { id?: number } },
+  sender: { url?: string; tab?: { id?: number; windowId?: number } },
   respond: (data: BannerData | null) => void,
 ): true | undefined {
   const domain = sender.url ? shopKey(sender.url) : null;
   if (!domain) return;
   if (message.type === 'banner:seen') {
     void browser.storage.session.set({ [seenKey(domain)]: true });
+    return;
+  }
+  if (message.type === 'banner:open') {
+    void openNotes(domain, sender.tab?.windowId);
     return;
   }
   if (message.type === 'banner:load') {
@@ -111,6 +115,19 @@ async function bannerData(domain: string, tabId: number | undefined): Promise<Ba
   const key = seenKey(domain);
   const [seen, { tab }] = await Promise.all([browser.storage.session.get(key), loadSettings()]);
   return { summary, collapsed: seen[key] === true, tab };
+}
+
+/**
+ * The notes live in the toolbar popup, and Chrome 127 and Firefox open it on
+ * request when the click comes from the banner. A browser that refuses gets
+ * the overview page with the shop opened instead.
+ */
+async function openNotes(domain: string, windowId: number | undefined) {
+  try {
+    await browser.action.openPopup(windowId === undefined ? undefined : { windowId });
+  } catch {
+    await openShopPage(domain);
+  }
 }
 
 /** The toolbar button shows the verdict too. The browser clears it on the next navigation. */

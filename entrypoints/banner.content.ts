@@ -3,6 +3,7 @@ import { browser } from '@/platform/browser';
 import { formatMonth, t, tagLabel } from '@/platform/i18n';
 import { mountBanner } from '@/ui/banner';
 import css from '@/ui/banner.css?inline';
+import mark from '@/assets/icon-small.svg?raw';
 import { summaryText } from '@/ui/labels';
 
 const TITLES = {
@@ -30,6 +31,7 @@ export default defineContentScript({
       collapsed: data.collapsed,
       tab: data.tab,
       onCollapse: () => void ask({ type: 'banner:seen' }),
+      onOpen: () => void ask({ type: 'banner:open' }),
       content: {
         standing,
         title: t(TITLES[standing]),
@@ -42,6 +44,8 @@ export default defineContentScript({
           .join(' · '),
         note: latest.note,
         brand: t('extName'),
+        mark,
+        notesLabel: t('bannerNotes'),
         hideLabel: t('bannerHide'),
         showLabel: t('bannerShow'),
       },

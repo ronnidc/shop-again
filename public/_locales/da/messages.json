@@ -61,6 +61,7 @@
   "bannerTitleBad": { "message": "Du har haft en dårlig oplevelse her" },
   "bannerTitleGood": { "message": "Du har haft en god oplevelse her" },
   "bannerTitleMixed": { "message": "Du har haft blandede oplevelser her" },
+  "bannerNotes": { "message": "Se noterne" },
   "bannerHide": { "message": "Skjul" },
   "bannerShow": { "message": "Vis dine noter om denne shop" },
 

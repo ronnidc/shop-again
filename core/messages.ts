@@ -4,7 +4,9 @@ import type { Summary } from './model';
 export type Message =
   | { type: 'banner:load' }
   /** The user has had the banner in front of them and it is now out of the way. */
-  | { type: 'banner:seen' };
+  | { type: 'banner:seen' }
+  /** The user wants the notes behind the banner. */
+  | { type: 'banner:open' };
 
 export interface BannerData {
   summary: Summary;

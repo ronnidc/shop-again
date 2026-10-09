@@ -61,6 +61,7 @@
   "bannerTitleBad": { "message": "You had a bad experience here" },
   "bannerTitleGood": { "message": "You had a good experience here" },
   "bannerTitleMixed": { "message": "You have had mixed experiences here" },
+  "bannerNotes": { "message": "See notes" },
   "bannerHide": { "message": "Hide" },
   "bannerShow": { "message": "Show your notes about this shop" },
 

@@ -12,6 +12,9 @@ export interface BannerContent {
   detail: string;
   note?: string;
   brand: string;
+  /** The small mark as SVG markup, the same the toolbar button shows. */
+  mark: string;
+  notesLabel: string;
   hideLabel: string;
   showLabel: string;
 }
@@ -25,6 +28,8 @@ export interface BannerOptions {
   tab: boolean;
   /** Called once, the first time the bar gets out of the way. */
   onCollapse(): void;
+  /** Called when the user asks for the notes behind the banner. */
+  onOpen(): void;
 }
 
 // Good news does not need to stay in the way. A warning stays until the user
@@ -38,7 +43,7 @@ const SCROLL_PX = 120;
  */
 const PLACES = [0.96, 0.88, 0.8, 0.72, 0.64, 0.56, 0.5, 0.44, 0.36, 0.28, 0.2, 0.12, 0.04];
 
-export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse }: BannerOptions): HTMLElement {
+export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse, onOpen }: BannerOptions): HTMLElement {
   const host = document.createElement('shop-again-banner');
   // Closed, so the shop's own scripts and styles cannot reach in.
   const shadow = host.attachShadow({ mode: 'closed' });
@@ -67,6 +72,9 @@ export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse 
     h(
       'div',
       { class: 'bar', role: 'status' },
+      // The sender comes first, as the mark the user knows from the toolbar
+      // button, so the bar is never taken for the shop's own.
+      h('span', { class: 'sender' }, markElement(content.mark), content.brand),
       icon(content.standing),
       h(
         'p',
@@ -75,7 +83,9 @@ export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse 
         h('span', {}, content.detail),
         content.note && h('q', { class: 'note' }, content.note),
       ),
-      h('span', { class: 'brand' }, content.brand),
+      // The one action besides closing: the notes live in the popup, and a
+      // clipped quote is not a button.
+      h('button', { type: 'button', class: 'notes', onclick: onOpen }, content.notesLabel),
       close,
     ),
     tab,
@@ -135,6 +145,14 @@ export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse 
   document.documentElement.append(host);
   if (collapsed) placeTab();
   return host;
+}
+
+/** The mark is the extension's own file, parsed as a document and not as HTML in the shop's page. */
+function markElement(svg: string): Element {
+  const mark = new DOMParser().parseFromString(svg, 'image/svg+xml').documentElement;
+  mark.setAttribute('class', 'mark');
+  mark.setAttribute('aria-hidden', 'true');
+  return mark;
 }
 
 function applyStyles(shadow: ShadowRoot, css: string) {

@@ -6,6 +6,8 @@ const content = (standing: BannerContent['standing']): BannerContent => ({
   title: 'You had a bad experience here',
   detail: 'Slow delivery · March 2026',
   brand: 'Shop Again?',
+  mark: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128"/></svg>',
+  notesLabel: 'See notes',
   hideLabel: 'Hide',
   showLabel: 'Show your notes about this shop',
 });
@@ -16,8 +18,20 @@ const options = (overrides: Partial<BannerOptions> = {}): BannerOptions => ({
   collapsed: false,
   tab: true,
   onCollapse: vi.fn(),
+  onOpen: vi.fn(),
   ...overrides,
 });
+
+/** The banner's inside is closed to the page, so the test catches the root as it is made. */
+function catchShadow(): () => ShadowRoot {
+  let shadow: ShadowRoot | undefined;
+  const attach = Element.prototype.attachShadow;
+  vi.spyOn(Element.prototype, 'attachShadow').mockImplementation(function (this: Element, init) {
+    shadow = attach.call(this, init);
+    return shadow;
+  });
+  return () => shadow!;
+}
 
 function scrollTo(y: number) {
   Object.defineProperty(window, 'scrollY', { value: y, configurable: true });
@@ -33,7 +47,20 @@ describe('mountBanner', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
     document.querySelector('shop-again-banner')?.remove();
+  });
+
+  it('asks for the notes when the link is clicked, and not for a close', () => {
+    const onOpen = vi.fn();
+    const shadow = catchShadow();
+    mountBanner(options({ onOpen }));
+
+    shadow().querySelector<HTMLButtonElement>('.close')!.click();
+    expect(onOpen).not.toHaveBeenCalled();
+
+    shadow().querySelector<HTMLButtonElement>('.notes')!.click();
+    expect(onOpen).toHaveBeenCalledTimes(1);
   });
 
   it('adds one element to the page and keeps its inside closed to the page', () => {
