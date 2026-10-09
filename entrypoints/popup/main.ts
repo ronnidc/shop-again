@@ -50,6 +50,9 @@ async function showDrafts() {
 document.documentElement.lang = browser.i18n.getUILanguage();
 fill(
   element('more'),
+  // The sender, with the mark the toolbar button shows, so the popup is
+  // recognized as the same thing as the banner.
+  h('span', { class: 'brand' }, h('img', { src: 'icon/32.png', alt: '' }), t('extName')),
   // The gear says that the settings live on the same page.
   h('button', { type: 'button', class: 'link', onclick: () => void openSettings() }, icon('gear'), t('allShops')),
 );
