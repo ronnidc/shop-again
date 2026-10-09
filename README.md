@@ -67,4 +67,4 @@ npm run build:firefox    # .output/firefox-mv3
 
 ## Releasing
 
-Bump the version in `package.json`, move the changes in `CHANGELOG.md` to a release section, tag `vX.Y.Z`, build the zips and upload them. The listing texts, the images and the steps for each store are in [store/README.md](store/README.md). The icons are rendered from `store/icon.svg` with `store/icons.sh`.
+Bump the version in `package.json`, move the changes in `CHANGELOG.md` to a release section, tag `vX.Y.Z`, build the zips and upload them. The listing texts, the images and the steps for each store are in [store/README.md](store/README.md). The icons are rendered from `assets/icon.svg` and `assets/icon-small.svg` with `store/icons.sh`.

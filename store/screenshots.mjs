@@ -169,7 +169,7 @@ async function main() {
     for (const [index, shot] of SHOTS.entries()) {
       const raw = raws[index];
       const html = (await readFile(join(STORE, 'promo/frame.html'), 'utf8'))
-        .replaceAll('{{icon}}', pathToFileURL(join(STORE, 'icon.svg')).href)
+        .replaceAll('{{icon}}', pathToFileURL(join(ROOT, 'assets/icon.svg')).href)
         .replaceAll('{{title}}', shot.title)
         .replaceAll('{{subtitle}}', shot.subtitle)
         .replaceAll('{{kind}}', raw.width > 800 ? 'page' : 'popup')

@@ -22,19 +22,18 @@
         color: #fff;
         font-family: -apple-system, system-ui, 'Segoe UI', sans-serif;
       }
+      /* The icon brings its own white square, so it only needs a shadow. */
       .badge {
-        display: grid;
-        place-items: center;
         flex: none;
         inline-size: 280px;
         block-size: 280px;
-        border-radius: 64px;
-        background: #fff;
+        border-radius: 61px;
         box-shadow: 0 32px 80px rgba(10, 30, 90, 0.35);
       }
       .badge img {
-        inline-size: 220px;
-        block-size: 220px;
+        display: block;
+        inline-size: 280px;
+        block-size: 280px;
       }
       h1 {
         margin: 0;
@@ -54,7 +53,7 @@
     </style>
   </head>
   <body>
-    <div class="badge"><img src="../icon.svg" alt="" /></div>
+    <div class="badge"><img src="../../assets/icon.svg" alt="" /></div>
     <div>
       <h1>Shop Again?</h1>
       <p>Note how an order went. The next time you open that shop, a banner reminds you.</p>
