@@ -85,7 +85,7 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 - Listing: name, summary and description from `listing.en.md`, Danish from `listing.da.md` under the language menu, category Shopping, support site, license GNU General Public License v3.0 from the menu, privacy policy pasted in full (AMO wants the text, not a link). Screenshots are optional and take any size, the 1280 x 800 ones do.
 - Notes to reviewer: the reviewer notes above.
 - The add-on ID `shop-again@ronnidc` in `wxt.config.ts` is permanent from the first upload.
-- The manifest declares Firefox for Android (142 and up). Until it has been tried on a phone, untick Android under compatibility on AMO, or try it first: the popup opens as a page there and the banner needs the content script to run, which it does.
+- Untick Android under compatibility when the first version is uploaded, decided 2026-10-12. The manifest cannot opt out of Android, its `gecko_android` key only sets a minimum version, and leaving the key out makes the linter hold Android to the desktop minimum. The right-click menu, sync and the badge do not exist on Android, and the audience is about one percent of mobile browsing, so it waits for a version that has been tried on a phone.
 
 ## Before the first upload
 

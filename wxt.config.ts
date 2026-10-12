@@ -47,6 +47,10 @@ export default defineConfig({
             required: ['none'],
           },
         },
+        // Only a minimum: the manifest cannot opt out of Android, and
+        // without this key the linter holds Android to the desktop minimum.
+        // Android is left out on AMO itself, under compatibility, until a
+        // version has been tried on a phone.
         gecko_android: {
           strict_min_version: '142.0',
         },
