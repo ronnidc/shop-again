@@ -3,6 +3,7 @@
   "description": "Browser extension that remembers your own experiences with web shops and reminds you when you come back",
   "private": true,
   "version": "1.0.0",
+  "license": "GPL-3.0-only",
   "type": "module",
   "engines": {
     "node": ">=22"

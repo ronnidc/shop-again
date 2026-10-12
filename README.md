@@ -68,3 +68,9 @@ npm run build:firefox    # .output/firefox-mv3
 ## Releasing
 
 Bump the version in `package.json`, move the changes in `CHANGELOG.md` to a release section, tag `vX.Y.Z`, build the zips and upload them. The listing texts, the images and the steps for each store are in [store/README.md](store/README.md). The icons are rendered from `assets/icon.svg` and `assets/icon-small.svg` with `store/icons.sh`.
+
+## License
+
+Copyright 2026 Ronni Chidekel. Shop Again? is free software: you can redistribute it and modify it under the terms of the GNU General Public License, version 3, see [LICENSE](LICENSE). A modified version has to be published under the same license, with its source.
+
+The name "Shop Again?" and the mark are not part of the license. As section 7 of the license allows, no rights under trademark law are granted, so a modified version goes by a name and a mark of its own.
