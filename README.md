@@ -30,18 +30,6 @@ Something not working, or an idea? Write to support@ronnidc.com, or use the issu
 
 Sharing notes between users is out of scope. If it ever happens, only verdicts and reason codes are shared, in aggregate, never free text.
 
-## Structure
-
-| Folder | Holds | May use |
-|---|---|---|
-| `core/` | The model, shop names, reasons, the export format, the feedback links | Nothing from the browser |
-| `platform/` | Storage, permissions and texts, on top of the extension API | `core/` |
-| `ui/` | The shop view, the overview and the banner, as plain DOM | `core/`, `platform/` |
-| `entrypoints/` | Popup, options page, background script and banner script | Everything, and WXT |
-| `store/` | The listing texts, the images and the screenshot tooling for the stores, outside the build | Nothing |
-
-`ui/banner.ts` is the exception in `ui/`: it runs in the shop's page and uses no extension API.
-
 ## Commands
 
 | Command | Does |
@@ -68,10 +56,6 @@ npm run build:firefox    # .output/firefox-mv3
 ```
 
 `npm run zip` and `npm run zip:firefox` write the packages to `.output/`, and the Firefox one comes with a `-sources.zip` for Mozilla's reviewers. The build is deterministic: the sources zip rebuilt in a clean folder gives output identical byte for byte to the package.
-
-## Releasing
-
-Bump the version in `package.json`, move the changes in `CHANGELOG.md` to a release section, tag `vX.Y.Z`, build the zips and upload them. The listing texts, the images and the steps for each store are in [store/README.md](store/README.md). The icons are rendered from `assets/icon.svg` and `assets/icon-small.svg` with `store/icons.sh`.
 
 ## License
 

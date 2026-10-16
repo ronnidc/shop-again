@@ -31,7 +31,7 @@ Screenshots are full bleed, no padding, no rounded corners. The icon has an alph
 1. Set the version in `package.json` and move the changes in `CHANGELOG.md` from Unreleased to a release section with today's date.
 2. `npm test && npm run compile && npm run build:firefox && npm run lint:firefox`.
 3. `npm run zip && npm run zip:firefox`, which leaves three files in `.output/`: `shop-again-X.Y.Z-chrome.zip` for Chrome and Edge, `shop-again-X.Y.Z-firefox.zip` for Firefox, and `shop-again-X.Y.Z-sources.zip` for Mozilla's reviewers.
-4. Commit, tag `vX.Y.Z`, push.
+4. Commit, tag `vX.Y.Z`, push, and make the GitHub release from the tag with the changelog section as its notes: `gh release create vX.Y.Z --title X.Y.Z --notes-file <notes>`. Notes only, no packages: the stores are the distribution, and the Firefox zip is unsigned anyway.
 5. Upload to the three stores as below. A release only reaches users when each store has reviewed it, which takes from hours (Firefox, usually) to days (Chrome, up to a week for the first version, Edge up to seven business days).
 
 ## Answers the forms ask for

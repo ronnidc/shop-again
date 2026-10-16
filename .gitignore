@@ -2,6 +2,8 @@
 node_modules/
 *.log
 .claude/
+# Agent notes, kept in dotfiles and symlinked here.
+CLAUDE.md
 
 # WXT
 .output/
