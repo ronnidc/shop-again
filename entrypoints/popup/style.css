@@ -27,8 +27,14 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: 13px;
-  font-weight: 600;
+  color: var(--brand);
+}
+
+/* The name's capitals at the 9.5 px of 13 px text. */
+.brand .name {
+  display: block;
+  block-size: 14px;
+  inline-size: auto;
 }
 
 /* The icon with its white square, as the toolbar shows it. On light a border

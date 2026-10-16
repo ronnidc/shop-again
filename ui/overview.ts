@@ -349,7 +349,7 @@ export function mountOverview(root: HTMLElement, { open = null }: { open?: strin
         'div',
         { class: 'text' },
         h('h1', {}, svg(nameMark, { class: 'name', role: 'img', 'aria-label': t('extName') })),
-        h('p', { class: 'muted' }, t('optionsTagline')),
+        h('p', { class: 'tagline' }, t('optionsTagline')),
       ),
     ),
     h('main', {}, h('section', {}, toolbar(), list, addShopForm()), settingsSection, dataSection()),

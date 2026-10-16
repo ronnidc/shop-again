@@ -38,11 +38,16 @@ body {
   line-height: 0;
 }
 
-/* The name in the brand's own face, its capitals at a 24 px heading's 18 px. */
+/* The name in the brand's own face, its capitals at a 24 px heading's 18 px,
+   and the tagline in the same color, so the lockup is one thing. */
 .name {
   display: block;
   block-size: 27px;
   inline-size: auto;
+  color: var(--brand);
+}
+
+.masthead .tagline {
   color: var(--brand);
 }
 
