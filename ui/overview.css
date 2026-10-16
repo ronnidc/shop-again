@@ -31,24 +31,24 @@ body {
 
 .masthead .text {
   display: grid;
-  gap: 6px;
+  gap: 2px;
 }
 
 .masthead h1 {
   line-height: 0;
 }
 
-/* The name in the brand's own face, its capitals at a 24 px heading's 18 px,
-   and the tagline in the same color, so the lockup is one thing. */
+/* The name in the brand's own face, its capitals at 20 px, and the tagline in
+   the same color a step lighter, so the lockup is one thing with two weights. */
 .name {
   display: block;
-  block-size: 27px;
+  block-size: 30px;
   inline-size: auto;
   color: var(--brand);
 }
 
 .masthead .tagline {
-  color: var(--brand);
+  color: color-mix(in srgb, var(--brand) 80%, transparent);
 }
 
 main,

@@ -7,6 +7,7 @@ const content = (standing: BannerContent['standing']): BannerContent => ({
   detail: 'Slow delivery · March 2026',
   brand: 'Shop Again?',
   mark: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128"/></svg>',
+  name: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 100"><rect width="600" height="100"/></svg>',
   notesLabel: 'See notes',
   hideLabel: 'Hide',
   showLabel: 'Show your notes about this shop',

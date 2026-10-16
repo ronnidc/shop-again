@@ -4,6 +4,7 @@ import { formatMonth, t, tagLabel } from '@/platform/i18n';
 import { mountBanner } from '@/ui/banner';
 import css from '@/ui/banner.css?inline';
 import mark from '@/assets/icon-small.svg?raw';
+import name from '@/assets/name.svg?raw';
 import { summaryText } from '@/ui/labels';
 
 const TITLES = {
@@ -45,6 +46,7 @@ export default defineContentScript({
         note: latest.note,
         brand: t('extName'),
         mark,
+        name,
         notesLabel: t('bannerNotes'),
         hideLabel: t('bannerHide'),
         showLabel: t('bannerShow'),

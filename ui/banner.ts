@@ -14,6 +14,8 @@ export interface BannerContent {
   brand: string;
   /** The small mark as SVG markup, the same the toolbar button shows. */
   mark: string;
+  /** The name as SVG markup in the current color, as the extension's pages draw it. */
+  name: string;
   notesLabel: string;
   hideLabel: string;
   showLabel: string;
@@ -74,7 +76,12 @@ export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse,
       { class: 'bar', role: 'status' },
       // The sender comes first, as the mark the user knows from the toolbar
       // button, so the bar is never taken for the shop's own.
-      h('span', { class: 'sender' }, svg(content.mark, { class: 'mark', 'aria-hidden': 'true' }), content.brand),
+      h(
+        'span',
+        { class: 'sender' },
+        svg(content.mark, { class: 'mark', 'aria-hidden': 'true' }),
+        svg(content.name, { class: 'name', role: 'img', 'aria-label': content.brand }),
+      ),
       icon(content.standing),
       h(
         'p',

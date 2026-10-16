@@ -102,12 +102,19 @@ button.danger {
   font-weight: 600;
 }
 
+/* Links in the text's own color: the underline is what says "link", and a
+   second color would pull the eye to the least important thing on the page. */
+a,
+button.link {
+  color: CanvasText;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 button.link {
   padding: 0;
   border: 0;
   background: none;
-  color: LinkText;
-  text-decoration: underline;
 }
 
 input[type='text'],
