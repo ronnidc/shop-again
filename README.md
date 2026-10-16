@@ -12,6 +12,10 @@ Not published yet.
 - **The overview page** (the extension's options page) lists every shop with search and a filter, and holds the settings, export and import.
 - **The right-click menu** opens the overview page with the notes for the current shop, or for the shop a link goes to. It can be turned off in the settings.
 
+## Feedback
+
+Something not working, or an idea? Write to support@ronnidc.com, or use the issue forms at https://github.com/ronnidc/shop-again/issues/new/choose. The links at the bottom of the overview page open either one with the version and the browser filled in, which you can see and change before sending.
+
 ## Decisions
 
 - **Private notes, no server.** Notes live in `storage.sync`, which follows the browser account the user is already signed in to, with JSON export and import as backup and as the bridge between browsers. There is no account, no backend and no data collection.
@@ -30,7 +34,7 @@ Sharing notes between users is out of scope. If it ever happens, only verdicts a
 
 | Folder | Holds | May use |
 |---|---|---|
-| `core/` | The model, shop names, reasons, the export format | Nothing from the browser |
+| `core/` | The model, shop names, reasons, the export format, the feedback links | Nothing from the browser |
 | `platform/` | Storage, permissions and texts, on top of the extension API | `core/` |
 | `ui/` | The shop view, the overview and the banner, as plain DOM | `core/`, `platform/` |
 | `entrypoints/` | Popup, options page, background script and banner script | Everything, and WXT |

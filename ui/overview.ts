@@ -1,6 +1,8 @@
 import { shopKey } from '@/core/domain';
+import { describeBrowser, feedbackLinks, SUPPORT_EMAIL } from '@/core/feedback';
 import { compareNewest, summarize, today, type Shop, type Summary } from '@/core/model';
 import { mergeShop, parseExportFile, toExportFile } from '@/core/transfer';
+import { browser } from '@/platform/browser';
 import { formatMonth, t, tagLabel } from '@/platform/i18n';
 import {
   hasBanner,
@@ -337,6 +339,30 @@ export function mountOverview(root: HTMLElement, { open = null }: { open?: strin
     );
   }
 
+  /**
+   * The version, and the two ways to reach the developer: a mail for everyone
+   * and GitHub for those with an account. Both carry the version and the
+   * browser, so a report arrives with what a reply needs.
+   */
+  function about() {
+    const { version } = browser.runtime.getManifest();
+    const links = feedbackLinks({ name: t('extName'), version, browser: describeBrowser(navigator.userAgent) });
+    return h(
+      'footer',
+      { class: 'about' },
+      h('p', { class: 'muted' }, t('aboutVersion', version)),
+      h(
+        'p',
+        {},
+        t('feedbackLead'),
+        ' ',
+        h('a', { href: links.mail }, t('feedbackMail', SUPPORT_EMAIL)),
+        ' · ',
+        h('a', { href: links.issues, target: '_blank', rel: 'noopener' }, t('feedbackGitHub')),
+      ),
+    );
+  }
+
   fill(
     root,
     // The icon and the name are inlined so the page's colors reach them: the
@@ -353,6 +379,7 @@ export function mountOverview(root: HTMLElement, { open = null }: { open?: strin
       ),
     ),
     h('main', {}, h('section', {}, toolbar(), list, addShopForm()), settingsSection, dataSection()),
+    about(),
     dialog,
   );
 

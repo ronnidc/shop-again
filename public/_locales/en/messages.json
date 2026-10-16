@@ -98,5 +98,10 @@
   "exportButton": { "message": "Export to a file" },
   "importButton": { "message": "Import from a file" },
   "importDone": { "message": "Import done. Notes added: $1" },
-  "importInvalid": { "message": "This is not a Shop Again? export file." }
+  "importInvalid": { "message": "This is not a Shop Again? export file." },
+
+  "aboutVersion": { "message": "Version $1" },
+  "feedbackLead": { "message": "Something not working, or an idea?" },
+  "feedbackMail": { "message": "Write to $1" },
+  "feedbackGitHub": { "message": "Report it on GitHub" }
 }

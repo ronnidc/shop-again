@@ -54,7 +54,7 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 
 **Privacy policy URL.** https://github.com/ronnidc/shop-again/blob/main/PRIVACY.md. The repository has to be public for the URL to work, and the stores check it.
 
-**Homepage and support.** https://github.com/ronnidc/shop-again and https://github.com/ronnidc/shop-again/issues.
+**Homepage, support site and support email.** https://github.com/ronnidc/shop-again, https://github.com/ronnidc/shop-again/issues and support@ronnidc.com. Chrome has no support email field: the listing shows the developer account's verified contact email, which is set to the same address on the account page.
 
 **Notes to the reviewers.** Paste as is:
 
@@ -65,7 +65,7 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 - Account: https://chrome.google.com/webstore/devconsole, a one-time registration fee of 5 USD, and the Google account needs 2-step verification.
 - New item, upload `shop-again-X.Y.Z-chrome.zip`.
 - Store listing: the description from `listing.en.md`, category Shopping, language English. Add Danish as a second language from the language menu and paste `listing.da.md`. Upload the screenshots and the small promotional tile from `images/`. The store icon is read from the package.
-- Privacy practices: single purpose, permission justifications, remote code and data usage from above, and the privacy policy URL under the account's settings.
+- Privacy practices: single purpose, permission justifications, remote code and data usage from above, and the privacy policy URL and the contact email under the account's settings.
 - Distribution: public, all regions, free.
 - Submit for review. New items with a broad optional host permission can take longer.
 
@@ -84,7 +84,7 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 - Account: https://addons.mozilla.org/developers/, free.
 - Submit a new add-on, listed on this site, upload `shop-again-X.Y.Z-firefox.zip`.
 - The build is bundled and minified, so answer yes to "Do you need to submit source code?" and upload `shop-again-X.Y.Z-sources.zip`. The README in it has the build instructions. Mozilla rebuilds the package and diffs it against the upload, and the build is deterministic, so they match.
-- Listing: name, summary and description from `listing.en.md`, Danish from `listing.da.md` under the language menu, category Shopping, support site, license GNU General Public License v3.0 from the menu, privacy policy pasted in full (AMO wants the text, not a link). Screenshots are optional and take any size, the 1280 x 800 ones do.
+- Listing: name, summary and description from `listing.en.md`, Danish from `listing.da.md` under the language menu, category Shopping, support site and support email, license GNU General Public License v3.0 from the menu, privacy policy pasted in full (AMO wants the text, not a link). Screenshots are optional and take any size, the 1280 x 800 ones do.
 - Notes to reviewer: the reviewer notes above.
 - The add-on ID `shop-again@ronnidc` in `wxt.config.ts` is permanent from the first upload.
 - Untick Android under compatibility when the first version is uploaded, decided 2026-10-12. The manifest cannot opt out of Android, its `gecko_android` key only sets a minimum version, and leaving the key out makes the linter hold Android to the desktop minimum. The right-click menu, sync and the badge do not exist on Android, and the audience is about one percent of mobile browsing, so it waits for a version that has been tried on a phone.
@@ -94,4 +94,5 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 - The name is "Shop Again?", decided 2026-10-09. The question mark goes wherever the name is written for people: listings, texts, images and the extension's own pages. Identifiers carry none of it: `shop-again` in the package name, the add-on ID, the export file name and the repository. The closest trademark is SHOPAGAIN, US registration 7253456 (LatticeAI Inc., classes 35 and 42, registered 2023-12-26), a retention marketing platform for Shopify stores. Its app left the Shopify App Store in July 2025, its sites are down, and its North Carolina registration was revoked in November 2024, so a complaint is not expected. The registration itself stands until its maintenance filing falls due in 2029, so the name cannot be registered in the US before then. The other marks with the words are an Italian E-SHOPAGAIN from 2001 and a French second-hand retail chain from 2023.
 - The publisher is `ronnidc` on a personal account in each store, the same name as on the VS Code Marketplace and in the add-on ID, decided 2026-10-09. A non-trader under the EU Digital Services Act, because nothing is sold behind the extension, so the listing shows no address or phone number. The publisher is set per account, not per extension, so every later extension shares it. Should one ever support something sold, that one moves to Kudo Technologies ApS as a trader: Chrome and Firefox transfer an item to another publisher, Edge only through support.
 - The repository has to be public, or the privacy policy and the homepage need another address.
+- The public contact is support@ronnidc.com, decided 2026-10-16: the Chrome account's verified contact email, Edge's support contact and AMO's support email, and the address in the extension's footer and the repository's issue forms. It is on the publisher's own domain so the personal address stays off three public listings, and it has to receive mail before the first upload, because Chrome verifies it with a link. The login accounts do not change.
 - The license is GPL-3.0, decided 2026-10-12: `LICENSE` in the repository, `GPL-3.0-only` in `package.json`, and the README says that the name and the mark are not licensed, as section 7 of the GPL allows. A permissive license would have let a renamed copy with tracking into the stores next to this one. Copyleft does not stop a copy, but it has to publish its source under the same license.

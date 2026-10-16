@@ -152,6 +152,15 @@ section > h2 {
   flex-wrap: wrap;
 }
 
+/* Under everything and a size smaller: the version and the way to the developer. */
+.about {
+  display: grid;
+  gap: var(--space-1);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--border);
+  font-size: 13px;
+}
+
 dialog {
   inline-size: min(420px, 100%);
   padding: var(--space-4);

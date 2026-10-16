@@ -1,0 +1,19 @@
+name: An idea
+description: Something the extension should do, or do differently.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks. If you have no GitHub account, or would rather not post in public, write to support@ronnidc.com instead.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What would it help you with?
+      description: The situation you are in when you miss it. That is what makes an idea easy to weigh.

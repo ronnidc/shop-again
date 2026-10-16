@@ -1,6 +1,6 @@
 # Privacy policy for Shop Again?
 
-Last updated: 2026-10-09
+Last updated: 2026-10-16
 
 Shop Again? is a browser extension that keeps your own notes on web shops and shows them when you come back to a shop. This page says what it does with data. The short version: everything stays in your browser, and nothing is sent to anyone.
 
@@ -17,6 +17,8 @@ Notes and settings are kept in the browser's extension sync storage. If you are 
 ## What the extension sends
 
 Nothing. The extension has no server and makes no network requests. The developer never receives your notes, your browsing, or anything else. There is no analytics, no crash reporting and no advertising.
+
+The feedback links at the bottom of the overview page open your mail program or GitHub with the extension's version and your browser's name and version written in, which you see and can change before you send anything. Nothing is sent until you do.
 
 ## What the extension reads
 
@@ -42,4 +44,4 @@ Changes to this policy are published on this page with a new date.
 
 ## Contact
 
-Questions about privacy go to the issue tracker at https://github.com/ronnidc/shop-again/issues.
+Questions about privacy go to support@ronnidc.com, or to the issue tracker at https://github.com/ronnidc/shop-again/issues.

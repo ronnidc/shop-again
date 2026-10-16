@@ -7,8 +7,10 @@ const messages: Record<string, { message: string }> = en;
 beforeEach(() => {
   fakeBrowser.reset();
 
-  // The in-memory browser covers storage and messaging. Texts and permissions
-  // are filled in here: English texts, and a user who says yes when asked.
+  // The in-memory browser covers storage and messaging. Texts, permissions and
+  // the manifest are filled in here: English texts, a user who says yes when
+  // asked, and the version the overview page shows.
+  fakeBrowser.runtime.getManifest = (() => ({ version: '1.0.0' })) as typeof fakeBrowser.runtime.getManifest;
   fakeBrowser.i18n.getUILanguage = () => 'en';
   fakeBrowser.i18n.getMessage = ((name: string, substitutions: string[] = []) =>
     (messages[name]?.message ?? '').replace(

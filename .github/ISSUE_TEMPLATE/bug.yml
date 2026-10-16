@@ -1,0 +1,33 @@
+name: Something is not working
+description: The banner, the popup, the overview page or anything else that does not do what it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. If you have no GitHub account, or would rather not post in public, write to support@ronnidc.com instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, and what the extension did instead of what you expected.
+    validations:
+      required: true
+  - type: input
+    id: shop
+    attributes:
+      label: Which shop?
+      description: The shop it happened on, if it happened on one. Just the address, not your notes about it.
+      placeholder: https://shop.example
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: Filled in when you came here from the bottom of the extension's overview page.
+      placeholder: Chrome 141 on macOS
+  - type: input
+    id: version
+    attributes:
+      label: Shop Again? version
+      description: Also filled in from the overview page, where it is at the bottom.
+      placeholder: 1.0.0

@@ -98,5 +98,10 @@
   "exportButton": { "message": "Eksportér til en fil" },
   "importButton": { "message": "Importér fra en fil" },
   "importDone": { "message": "Import færdig. Noter tilføjet: $1" },
-  "importInvalid": { "message": "Det er ikke en eksportfil fra Shop Again?." }
+  "importInvalid": { "message": "Det er ikke en eksportfil fra Shop Again?." },
+
+  "aboutVersion": { "message": "Version $1" },
+  "feedbackLead": { "message": "Virker noget ikke, eller har du en idé?" },
+  "feedbackMail": { "message": "Skriv til $1" },
+  "feedbackGitHub": { "message": "Meld det på GitHub" }
 }

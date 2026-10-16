@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A note in progress survives the popup closing, for the rest of the browser session.
 - Site access one shop at a time, given once for every site, or never, chosen in the settings. Access is given back when a shop's last note is deleted.
 - English and Danish.
+- A footer on the overview page with the version and the two ways to send feedback, by mail or as a GitHub issue, with the version and the browser filled in.
 
 [Unreleased]: https://github.com/ronnidc/shop-again/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/ronnidc/shop-again/releases/tag/v1.0.0

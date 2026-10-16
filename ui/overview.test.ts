@@ -209,6 +209,18 @@ describe('settings', () => {
   });
 });
 
+describe('the footer', () => {
+  it('shows the version and the two ways to send feedback, with the version filled in', async () => {
+    const page = await mount({});
+    const footer = page.querySelector('footer')!;
+    expect(footer.textContent).toContain('Version 1.0.0');
+
+    const [mail, issues] = [...footer.querySelectorAll('a')].map((link) => link.getAttribute('href'));
+    expect(mail).toMatch(/^mailto:support@ronnidc\.com\?subject=Shop%20Again%3F%201\.0\.0/);
+    expect(issues).toMatch(/^https:\/\/github\.com\/ronnidc\/shop-again\/issues\/new\/choose\?version=1\.0\.0/);
+  });
+});
+
 describe('import', () => {
   it('adds the notes the user does not already have', async () => {
     const page = await mount();
