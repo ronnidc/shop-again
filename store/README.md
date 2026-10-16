@@ -19,7 +19,7 @@ Everything the three stores ask for, so a release is uploads and form filling. T
 
 | Image | Chrome Web Store | Edge Add-ons | Firefox Add-ons |
 |---|---|---|---|
-| Store icon or logo | 128 x 128, from the package | 300 x 300, `images/logo-300.png` | 128 x 128, from the package |
+| Store icon or logo | 128 x 128, `public/icon/128.png`, uploaded on the listing | 300 x 300, `images/logo-300.png` | 128 x 128, `public/icon/128.png`, uploaded under Manage Listing, Images, or the listing shows a puzzle piece |
 | Screenshots | 1280 x 800, at least 1, at most 5 | 1280 x 800, at most 6 | Any size, optional |
 | Small promotional tile | 440 x 280, listings without one are ranked after those with one | 440 x 280, optional | Not used |
 | Marquee or large tile | 1400 x 560, optional | 1400 x 560, optional | Not used |
@@ -60,11 +60,15 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 
 > Shop Again? keeps the user's own notes on web shops and shows them as a banner when the user comes back. To test: open any web shop, click the toolbar button, choose Good or Bad, pick a reason and click Save. The browser then asks for access to that shop's domain, which is only used to show the banner there. Reload the shop to see the banner. The popup's "All shops" link opens the overview page with every shop, the settings, export and import. There is no server, no network request and no remote code. The source builds with Node 24 and npm: `npm ci` and `npm run build:firefox` (or `npm run build` for Chrome), see "Building from source" in the README.
 
+Chrome's test instructions field (under Access) takes 500 characters, so Chrome gets this one, 495 characters:
+
+> Keeps the user's own notes on web shops and shows them as a banner when the user comes back. To test: open any web shop, click the toolbar button, choose Good or Bad, pick a reason and click Save. The browser asks for access to that shop's domain, used only to show the banner there. Reload the shop to see it. "All shops" in the popup opens the overview page with every shop, the settings, export and import. No server, no network requests, no remote code. Source: github.com/ronnidc/shop-again
+
 ## Chrome Web Store
 
 - Account: https://chrome.google.com/webstore/devconsole, a one-time registration fee of 5 USD, and the Google account needs 2-step verification.
 - New item, upload `shop-again-X.Y.Z-chrome.zip`.
-- Store listing: the description from `listing.en.md`, category Shopping, language English. Add Danish as a second language from the language menu and paste `listing.da.md`. Upload the screenshots and the small promotional tile from `images/`. The store icon is read from the package.
+- Store listing: the description from `listing.en.md`, category Shopping, language English. Add Danish as a second language from the language menu and paste `listing.da.md`. Upload the screenshots and the two promotional tiles from `images/` as global assets, which every language inherits, and leave the localized assets empty: a localized set only overrides the global one for its language, and is for the day there are Danish screenshots. The store icon is `public/icon/128.png`, which the listing asks for although the package carries it.
 - Privacy practices: single purpose, permission justifications, remote code and data usage from above, and the privacy policy URL and the contact email under the account's settings.
 - Distribution: public, all regions, free.
 - Submit for review. New items with a broad optional host permission can take longer.
@@ -77,17 +81,17 @@ The same answers go to Chrome and Edge, and Firefox asks for a subset.
 - Properties: category Shopping, website and support contact from above.
 - Privacy: the same answers as Chrome.
 - Store listings: a row per language in the package, English and Danish. Each needs the description and the logo (`images/logo-300.png`). The name and the short description come from the manifest. Screenshots and tiles can be duplicated to the other language with the button under each.
-- Notes for certification: the reviewer notes above. Publish.
+- Publish asks whether a tester needs credentials or other info. Answer yes, although there are no credentials: no disables the notes field, and the banner is conditional on a saved note and an access grant, which is what the notes explain (Microsoft's own example 2 under the field). Paste the reviewer notes above, up to 2,000 characters, and publish.
 
 ## Firefox Add-ons
 
 - Account: https://addons.mozilla.org/developers/, free.
 - Submit a new add-on, listed on this site, upload `shop-again-X.Y.Z-firefox.zip`.
 - The build is bundled and minified, so answer yes to "Do you need to submit source code?" and upload `shop-again-X.Y.Z-sources.zip`. The README in it has the build instructions. Mozilla rebuilds the package and diffs it against the upload, and the build is deterministic, so they match.
-- Listing: name, summary and description from `listing.en.md`, Danish from `listing.da.md` under the language menu, category Shopping, support site and support email, license GNU General Public License v3.0 from the menu, privacy policy pasted in full (AMO wants the text, not a link). Screenshots are optional and take any size, the 1280 x 800 ones do.
+- Listing: name, summary and description from `listing.en.md`, category Shopping, support site and support email, license GNU General Public License v3.0 from the menu, privacy policy pasted in full (AMO wants the text, not a link). English only: AMO has no Danish locale, so `listing.da.md` is for Chrome and Edge, and the extension's own Danish comes from the package. Screenshots are optional and take any size, the 1280 x 800 ones do, and they are uploaded after the submission under Manage Listing, Images, each with a caption: the title and subtitle its frame shows, from `SHOTS` in `screenshots.mjs`.
 - Notes to reviewer: the reviewer notes above.
 - The add-on ID `shop-again@ronnidc` in `wxt.config.ts` is permanent from the first upload.
-- Untick Android under compatibility when the first version is uploaded, decided 2026-10-12. The manifest cannot opt out of Android, its `gecko_android` key only sets a minimum version, and leaving the key out makes the linter hold Android to the desktop minimum. The right-click menu, sync and the badge do not exist on Android, and the audience is about one percent of mobile browsing, so it waits for a version that has been tried on a phone.
+- Firefox for Android is out until a version has been tried on a phone: the right-click menu and the badge do not exist there, and the background registers the menu listener unconditionally, so the banner never loads. The manifest decides this, not AMO: since 2023 AMO reads Android compatibility from the `gecko_android` key alone, the compatibility checkbox at upload is disabled, and 1.0.0 went up listed for Android because the key was there. 1.0.1 dropped the key and raised the Firefox minimum to 142, the version the linter wants when it holds Android to the desktop minimum. Keep the key out until Android is meant.
 
 ## Before the first upload
 
