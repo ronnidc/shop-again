@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time. If you have no GitHub account, or would rather not post in public, write to support@ronnidc.com instead.
+        Thanks for taking the time. If you would rather not post in public, write to support@ronnidc.com instead.
   - type: textarea
     id: what
     attributes:
