@@ -18,6 +18,7 @@ import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { FONT_DIR, font } from './fonts.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const STORE = join(ROOT, 'store');
@@ -134,10 +135,12 @@ async function main() {
     await seed.evaluate(`chrome.storage.sync.set(${JSON.stringify(NOTES)})`);
     await sleep(1500);
 
+    // The shop is captured narrower than the frame shows it, so the banner,
+    // the point of the picture, comes out larger than life.
     const shop = await openPage(cdp, `http://${SHOP_BAD}/`);
-    await shop.metrics(1280, 640, 2);
+    await shop.metrics(1000, 560, 2);
     await sleep(1500);
-    const banner = await shop.screenshot({ width: 1280, height: 640 });
+    const banner = await shop.screenshot({ width: 1000, height: 560 });
 
     const note = await popup(cdp, base, seed, shop, async (page) => {
       await page.evaluate(`document.querySelector('button.primary').click()`);
@@ -160,39 +163,44 @@ async function main() {
     const good = await popup(cdp, base, seed, shop, async () => {});
 
     const overview = await openPage(cdp, `${base}options.html`);
-    await overview.metrics(1280, 800, 2);
+    await overview.metrics(1080, 720, 2);
     await sleep(800);
-    const all = await overview.screenshot({ width: 1280, height: 800 });
+    const all = await overview.screenshot({ width: 1080, height: 720 });
 
+    // The frames and the tiles set their text in Poppins from the same files
+    // the mark is drawn with.
+    for (const file of ['Poppins-Regular.ttf', 'Poppins-SemiBold.ttf']) await font(file);
+    const fill = (html) =>
+      html.replaceAll('{{fonts}}', pathToFileURL(FONT_DIR).href).replaceAll('{{root}}', pathToFileURL(ROOT).href);
     const frame = await openPage(cdp, 'about:blank');
+    const render = async (name, html, width, height, file) => {
+      const page = join(temp, `${name}.html`);
+      await writeFile(page, fill(html));
+      await frame.navigate(pathToFileURL(page).href);
+      await frame.metrics(width, height, 1);
+      await sleep(400);
+      await frame.screenshot({ width, height }, join(IMAGES, file));
+      console.log(file);
+    };
+
     const raws = [note, banner, good, all];
     for (const [index, shot] of SHOTS.entries()) {
       const raw = raws[index];
       const html = (await readFile(join(STORE, 'promo/frame.html'), 'utf8'))
-        .replaceAll('{{icon}}', pathToFileURL(join(ROOT, 'assets/icon.svg')).href)
         .replaceAll('{{title}}', shot.title)
         .replaceAll('{{subtitle}}', shot.subtitle)
         .replaceAll('{{kind}}', raw.width > 800 ? 'page' : 'popup')
         .replaceAll('{{width}}', String(raw.width))
         .replaceAll('{{image}}', `data:image/png;base64,${raw.png.toString('base64')}`);
-      const file = join(temp, `frame-${index}.html`);
-      await writeFile(file, html);
-      await frame.navigate(pathToFileURL(file).href);
-      await frame.metrics(1280, 800, 1);
-      await sleep(400);
-      await frame.screenshot({ width: 1280, height: 800 }, join(IMAGES, shot.file));
-      console.log(shot.file);
+      await render(`frame-${index}`, html, 1280, 800, shot.file);
     }
 
     for (const [file, width, height] of [
       ['tile-440x280.png', 440, 280],
       ['marquee-1400x560.png', 1400, 560],
     ]) {
-      await frame.navigate(pathToFileURL(join(STORE, `promo/${file.split('-')[0]}.html`)).href);
-      await frame.metrics(width, height, 1);
-      await sleep(400);
-      await frame.screenshot({ width, height }, join(IMAGES, file));
-      console.log(file);
+      const name = file.split('-')[0];
+      await render(name, await readFile(join(STORE, `promo/${name}.html`), 'utf8'), width, height, file);
     }
   } finally {
     if (chrome) {
@@ -226,6 +234,9 @@ async function popup(cdp, base, extensionPage, tab, prepare) {
   await page.evaluate('document.activeElement?.blur()');
   await sleep(500);
   const [width, height] = await page.evaluate('[innerWidth, innerHeight]');
+  // The frame shows the popup larger than life, which stays sharp because a
+  // Retina display captures it at twice its size. A popup takes neither a
+  // metrics override nor a scaled clip, the latter paints it twice.
   const shot = await page.screenshot({ width, height });
   await page.evaluate('window.close()');
   await sleep(300);

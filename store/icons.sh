@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Renders the extension icons and the Edge store logo. The toolbar sizes come
-# from the small mark, the bag alone, because the full mark's arrow turns to
-# mush below 48 pixels. Needs librsvg: brew install librsvg
+# Renders the extension icons and the Edge store logo. The sizes up to 48
+# come from the small mark, because the full mark's gaps fall under a pixel
+# there. Needs librsvg: brew install librsvg
 set -eu
 cd "$(dirname "$0")/.."
 
-for size in 16 32; do
+for size in 16 32 48; do
   rsvg-convert -w "$size" -h "$size" assets/icon-small.svg -o "public/icon/$size.png"
 done
-for size in 48 96 128; do
+for size in 96 128; do
   rsvg-convert -w "$size" -h "$size" assets/icon.svg -o "public/icon/$size.png"
 done
 

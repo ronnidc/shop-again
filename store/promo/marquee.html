@@ -3,60 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <title>Marquee promotional tile</title>
-    <!-- Rendered at 1400 by 560 by screenshots.mjs. -->
+    <!-- Rendered at 1400 by 560 by screenshots.mjs, which fills in the placeholders. -->
     <style>
+      @font-face {
+        font-family: Poppins;
+        font-weight: 400;
+        src: url('{{fonts}}/Poppins-Regular.ttf');
+      }
       html,
       body {
         margin: 0;
       }
+      /* The brand's two colors and nothing else: the stores ask for saturated
+         color, little text and branding that matches the icon. */
       body {
         display: flex;
         align-items: center;
-        gap: 72px;
+        gap: 48px;
         inline-size: 1400px;
         block-size: 560px;
         box-sizing: border-box;
-        padding-inline: 140px;
+        padding-inline: 120px;
         overflow: hidden;
-        background: linear-gradient(135deg, #1f4fd1 0%, #3a6cf0 100%);
+        background: #1e2a64;
         color: #fff;
-        font-family: -apple-system, system-ui, 'Segoe UI', sans-serif;
+        font-family: Poppins, sans-serif;
       }
-      /* The icon brings its own white square, so it only needs a shadow. */
-      .badge {
+      /* The icon brings its own white square with 8 of 128 air around it, so
+         320 shows a 280 tile. */
+      .icon {
         flex: none;
-        inline-size: 280px;
-        block-size: 280px;
-        border-radius: 61px;
-        box-shadow: 0 32px 80px rgba(10, 30, 90, 0.35);
+        inline-size: 320px;
+        block-size: 320px;
       }
-      .badge img {
+      .name {
         display: block;
-        inline-size: 280px;
-        block-size: 280px;
-      }
-      h1 {
-        margin: 0;
-        font-size: 84px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        line-height: 1.05;
+        block-size: 88px;
       }
       p {
-        margin-block: 18px 0;
+        margin-block: 22px 0;
         margin-inline: 0;
-        max-inline-size: 760px;
-        font-size: 32px;
+        max-inline-size: 780px;
+        font-size: 30px;
         line-height: 1.3;
-        opacity: 0.9;
+        color: rgba(255, 255, 255, 0.8);
       }
     </style>
   </head>
   <body>
-    <div class="badge"><img src="../../assets/icon.svg" alt="" /></div>
+    <img class="icon" src="{{root}}/assets/icon.svg" alt="" />
     <div>
-      <h1>Shop Again?</h1>
-      <p>Note how an order went. The next time you open that shop, a banner reminds you.</p>
+      <img class="name" src="{{root}}/store/promo/name-white.svg" alt="Shop Again?" />
+      <p>Note how an order went. A banner reminds you when you return.</p>
     </div>
   </body>
 </html>

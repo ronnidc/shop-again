@@ -1,18 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <!-- The full mark: a circular arrow for "again" around a shopping bag with
-       the question in it, in one dark blue. The white rounded square is part
-       of the icon, so the blue never sits on a dark toolbar or a dark store
-       page. The arrow keeps a white edge where it passes the bag. Used from
-       48 pixels up, the toolbar sizes come from icon-small.svg. -->
-  <rect width="128" height="128" rx="28" fill="#fff"/>
-  <g transform="translate(64 64) scale(0.88) translate(-64 -64)">
-    <path d="M52 52v-9a12 12 0 0 1 24 0v9" fill="none" stroke="#1e2a64" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M43 52h42a4 4 0 0 1 4 3.6l3 34a6 6 0 0 1-6 6.4H42a6 6 0 0 1-6-6.4l3-34a4 4 0 0 1 4-3.6z" fill="#1e2a64"/>
-    <g transform="translate(64 74) scale(0.5) translate(-64 -90)">
-      <path d="M50 76a14 14 0 1 1 20 12.6c-4.5 2.2-6 5-6 9.4" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="64" cy="110" r="6.5" fill="#fff"/>
-    </g>
-    <path d="M73.3 11.3A53.5 53.5 0 1 0 117.3 59.3A5.5 5.5 0 0 0 106.3 60.3A42.5 42.5 0 1 1 71.4 22.1L69.9 30.5L96.0 20.9L74.8 2.9Z" fill="#fff" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
-    <path d="M73.3 11.3A53.5 53.5 0 1 0 117.3 59.3A5.5 5.5 0 0 0 106.3 60.3A42.5 42.5 0 1 1 71.4 22.1L69.9 30.5L96.0 20.9L74.8 2.9Z" fill="#1e2a64"/>
-  </g>
+  <!-- The full mark, drawn by store/mark.mjs: a shopping bag with a hoop handle and a question badge on its lower right corner, in one dark blue. The question mark is a Poppins Bold glyph cut out of the badge. The white rounded square is part of the icon, inset 8 of 128 as the stores want air around an icon, so the blue never sits on a dark toolbar or a dark store page. Used from 48 pixels up, the toolbar sizes come from icon-small.svg. -->
+  <rect x="8" y="8" width="112" height="112" rx="25" fill="#fff"/>
+  <path d="M35 36L38.9 36V49.7A5.9 5.9 0 0 0 50.7 49.7V36L66 36V49.7A5.9 5.9 0 0 0 77.8 49.7V36L81.6 36A5.1 5.1 0 0 1 86.7 40.3L90 63.8A23.7 23.7 0 0 0 75.2 107.9L26.3 107.9A5.1 5.1 0 0 1 21.3 102.1L30 40.3A5.1 5.1 0 0 1 35 36Z" fill="#1e2a64"/>
+  <path d="M44.8 49.7V32.5A13.5 13.5 0 0 1 71.9 32.5V49.7" fill="none" stroke="#1e2a64" stroke-width="5.7" stroke-linecap="round"/>
+  <path d="M66.3 87.3A20.6 20.6 0 1 1 107.5 87.3A20.6 20.6 0 1 1 66.3 87.3ZM87.0 73.8Q90.8 73.8 93.2 75.8Q95.5 77.8 95.5 81.5L95.5 81.5Q95.5 84.9 93.3 86.8Q91.0 88.7 87.4 88.7L87.4 88.7L87.2 91.4L81.8 91.4L81.6 84.7L83.8 84.7Q86.6 84.7 88.0 84.0Q89.5 83.3 89.5 81.5L89.5 81.5Q89.5 80.3 88.8 79.5Q88.1 78.8 86.9 78.8L86.9 78.8Q85.6 78.8 84.9 79.6Q84.1 80.3 84.1 81.6L84.1 81.6L78.3 81.6Q78.3 79.4 79.3 77.6Q80.2 75.8 82.2 74.8Q84.2 73.8 87.0 73.8L87.0 73.8ZM84.6 100.8Q83.0 100.8 81.9 99.9Q80.9 98.9 80.9 97.5L80.9 97.5Q80.9 96.0 81.9 95.1Q83.0 94.1 84.6 94.1L84.6 94.1Q86.2 94.1 87.2 95.1Q88.2 96.0 88.2 97.5L88.2 97.5Q88.2 98.9 87.2 99.9Q86.2 100.8 84.6 100.8L84.6 100.8Z" fill="#1e2a64" fill-rule="evenodd"/>
 </svg>

@@ -78,6 +78,23 @@
         gap: 22px;
         font-weight: 500;
       }
+      /* The store screenshot captures the shop at 1000 pixels, where the
+         search would be a sliver. A real shop folds it into an icon there. */
+      @media (max-width: 1100px) {
+        header {
+          gap: 32px;
+          padding-inline: 48px;
+        }
+        nav {
+          gap: 22px;
+        }
+        .search {
+          display: none;
+        }
+        .icons {
+          margin-inline-start: auto;
+        }
+      }
       .cart {
         display: inline-flex;
         align-items: center;
