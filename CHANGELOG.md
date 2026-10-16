@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-17
+
+### Fixed
+
+- Firefox for Android is no longer offered. The `gecko_android` key made addons.mozilla.org list the extension for Android, where the right-click menu and the badge do not exist and the banner never loads. The minimum is now Firefox 142, the first version that reads the data collection declaration on desktop and on Android alike. The Chrome package is unchanged.
+
 ## [1.0.0] - 2026-10-16
 
 ### Added
@@ -21,5 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - English and Danish.
 - A footer on the overview page with the version and the two ways to send feedback, by mail or as a GitHub issue, with the version and the browser filled in.
 
-[Unreleased]: https://github.com/ronnidc/shop-again/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/ronnidc/shop-again/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/ronnidc/shop-again/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/ronnidc/shop-again/releases/tag/v1.0.0

@@ -40,20 +40,19 @@ export default defineConfig({
         gecko: {
           // Permanent once the first version is uploaded to AMO.
           id: 'shop-again@ronnidc',
-          // The first versions that read data_collection_permissions, on
-          // desktop and on Android.
-          strict_min_version: '140.0',
+          // Desktop reads data_collection_permissions from 140, Android from
+          // 142, and the linter holds Android to this minimum when there is
+          // no gecko_android key, so 142 keeps the lint clean.
+          strict_min_version: '142.0',
           data_collection_permissions: {
             required: ['none'],
           },
         },
-        // Only a minimum: the manifest cannot opt out of Android, and
-        // without this key the linter holds Android to the desktop minimum.
-        // Android is left out on AMO itself, under compatibility, until a
-        // version has been tried on a phone.
-        gecko_android: {
-          strict_min_version: '142.0',
-        },
+        // No gecko_android key: AMO reads Android compatibility from the
+        // manifest alone and lists the extension for Firefox for Android the
+        // moment the key is there. The right-click menu and the badge do not
+        // exist on Android, and the background registers the menu listener
+        // unconditionally, so Android waits for a version tried on a phone.
       },
     }),
   }),
