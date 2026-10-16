@@ -20,7 +20,9 @@ import {
   type BannerMode,
   type Settings,
 } from '@/platform/store';
-import { fill, h } from './dom';
+import markIcon from '@/assets/icon.svg?raw';
+import nameMark from '@/assets/name.svg?raw';
+import { fill, h, svg } from './dom';
 import { icon } from './icons';
 import { standingLabel, summaryText } from './labels';
 import { mountShopView } from './shop-view';
@@ -337,11 +339,18 @@ export function mountOverview(root: HTMLElement, { open = null }: { open?: strin
 
   fill(
     root,
+    // The icon and the name are inlined so the page's colors reach them: the
+    // name is drawn, in the brand's own face, and reads its name out loud.
     h(
       'header',
       { class: 'masthead' },
-      h('img', { class: 'logo', src: 'icon/128.png', alt: '' }),
-      h('div', {}, h('h1', {}, t('extName')), h('p', { class: 'muted' }, t('optionsTagline'))),
+      svg(markIcon, { class: 'logo', 'aria-hidden': 'true' }),
+      h(
+        'div',
+        { class: 'text' },
+        h('h1', {}, svg(nameMark, { class: 'name', role: 'img', 'aria-label': t('extName') })),
+        h('p', { class: 'muted' }, t('optionsTagline')),
+      ),
     ),
     h('main', {}, h('section', {}, toolbar(), list, addShopForm()), settingsSection, dataSection()),
     dialog,

@@ -26,6 +26,16 @@ export function fill(element: Element, ...children: Child[]): void {
   element.replaceChildren(...present(children));
 }
 
+/**
+ * An inline SVG from its markup, one of the extension's own drawings, so its
+ * shapes can take the page's colors. Attributes replace the markup's own.
+ */
+export function svg(markup: string, attrs: Record<string, string> = {}): SVGElement {
+  const element = new DOMParser().parseFromString(markup, 'image/svg+xml').documentElement as unknown as SVGElement;
+  for (const [name, value] of Object.entries(attrs)) element.setAttribute(name, value);
+  return element;
+}
+
 function present(children: Child[]): (Node | string)[] {
   return children.filter((child) => child !== false && child != null);
 }

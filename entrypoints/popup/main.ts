@@ -6,7 +6,8 @@ import { browser } from '@/platform/browser';
 import { t } from '@/platform/i18n';
 import { loadDraftDomains } from '@/platform/store';
 import { openSettings } from '@/platform/windows';
-import { fill, h } from '@/ui/dom';
+import smallMark from '@/assets/icon-small.svg?raw';
+import { fill, h, svg } from '@/ui/dom';
 import { icon } from '@/ui/icons';
 import { mountShopView } from '@/ui/shop-view';
 
@@ -52,7 +53,7 @@ fill(
   element('more'),
   // The sender, with the mark the toolbar button shows, so the popup is
   // recognized as the same thing as the banner.
-  h('span', { class: 'brand' }, h('img', { src: 'icon/32.png', alt: '' }), t('extName')),
+  h('span', { class: 'brand' }, svg(smallMark, { class: 'logo', 'aria-hidden': 'true' }), t('extName')),
   // The gear says that the settings live on the same page.
   h('button', { type: 'button', class: 'link', onclick: () => void openSettings() }, icon('gear'), t('allShops')),
 );

@@ -16,6 +16,11 @@
   --surface: color-mix(in srgb, CanvasText 5%, Canvas);
   --surface-hover: color-mix(in srgb, CanvasText 10%, Canvas);
 
+  /* The mark's navy for the name next to it, and for the edge that draws the
+     icon's white square where it would otherwise vanish into the page. */
+  --brand: light-dark(#1e2a64, #fff);
+  --brand-edge: light-dark(#1e2a64, transparent);
+
   --good: light-dark(#18794e, #5fd39c);
   --bad: light-dark(#b42318, #ff8f85);
   --mixed: light-dark(#8a5a00, #f2b84b);

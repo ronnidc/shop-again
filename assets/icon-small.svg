@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <!-- The small mark for the toolbar, 16 and 32 pixels, also inlined by the banner, drawn by store/mark.mjs: the bag with a heavier handle, a bigger badge and a Poppins Black question mark, filling the square, because the full mark's details turn to mush below 48 pixels. -->
-  <rect x="0" y="0" width="128" height="128" rx="28" fill="#fff"/>
+  <rect class="tile" x="0" y="0" width="128" height="128" rx="28" fill="#fff"/>
   <path d="M27 31.3L76.9 31.3A5.4 5.4 0 0 1 82.3 35.9L83.3 43.2A41.9 41.9 0 0 0 47.7 108.3L17.7 108.3A5.4 5.4 0 0 1 12.3 102.1L21.7 35.9A5.4 5.4 0 0 1 27 31.3Z" fill="#1e2a64"/>
   <path d="M37.5 31.3V27.5A14.5 14.5 0 0 1 66.5 27.5V31.3" fill="none" stroke="#1e2a64" stroke-width="8.2" stroke-linecap="round"/>
   <path d="M48.6 85.1A34 34 0 1 1 116.5 85.1A34 34 0 1 1 48.6 85.1ZM82.8 62.5Q89.2 62.5 93.1 65.7Q97.0 68.9 97.0 75.1L97.0 75.1Q97.0 80.2 93.6 83.3Q90.1 86.4 84.6 86.5L84.6 86.5L84.3 90.6L72.9 90.6L72.6 78.4L77.4 78.4Q80.8 78.4 82.7 77.6Q84.5 76.9 84.5 75.2L84.5 75.2Q84.5 74.1 83.9 73.5Q83.4 72.9 82.5 72.9L82.5 72.9Q81.3 72.9 80.8 73.6Q80.2 74.4 80.2 75.5L80.2 75.5L68.1 75.5Q68.0 71.9 69.6 69.0Q71.1 66.0 74.5 64.3Q77.8 62.5 82.8 62.5L82.8 62.5ZM78.8 107.6Q75.4 107.6 73.4 105.8Q71.4 104.0 71.4 101.3L71.4 101.3Q71.4 98.6 73.4 96.7Q75.4 94.9 78.8 94.9L78.8 94.9Q82.1 94.9 84.1 96.7Q86.1 98.6 86.1 101.3L86.1 101.3Q86.1 104.0 84.1 105.8Q82.1 107.6 78.8 107.6L78.8 107.6Z" fill="#1e2a64" fill-rule="evenodd"/>

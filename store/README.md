@@ -6,7 +6,7 @@ Everything the three stores ask for, so a release is uploads and form filling. T
 
 | File | Is |
 |---|---|
-| `mark.mjs` | Draws the mark, the small mark and the wordmark into `assets/`, and the name alone into `promo/`, as SVG paths, with the question mark and the text as Poppins glyphs, so a change to the mark is a number here and not a new drawing |
+| `mark.mjs` | Draws the mark, the small mark, the wordmark and the name into `assets/`, and the name in white into `promo/`, as SVG paths, with the question mark and the text as Poppins glyphs, so a change to the mark is a number here and not a new drawing |
 | `fonts.mjs` | Fetches Poppins from Google Fonts into the system temp directory for `mark.mjs` and the tiles, so the repo carries no font files |
 | `icons.sh` | Renders `public/icon/*.png` and `images/logo-300.png` from `assets/icon.svg` and `assets/icon-small.svg`, which live in `assets/` because the banner draws the small mark from the same file |
 | `listing.en.md`, `listing.da.md` | Name, short description, summary, description and search terms, per language |

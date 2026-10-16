@@ -145,14 +145,16 @@ function mark(g, { box, air, cx, cy, color }) {
 /**
  * An icon: the mark on a white rounded square (corner radius 22 percent),
  * inset from the 128 edge by `inset` and nudged up by `lift`, since the bag's
- * mass sits low and a geometrically centered mark looks low.
+ * mass sits low and a geometrically centered mark looks low. The square has a
+ * class so the extension's own pages, which inline the icon, can stroke it
+ * where a white square would otherwise vanish.
  */
 function icon(g, { inset, air, lift, comment }) {
   const tile = 128 - 2 * inset;
   return [
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">',
     `  <!-- ${comment} -->`,
-    `  <rect x="${inset}" y="${inset}" width="${tile}" height="${tile}" rx="${Math.round(tile * 0.22)}" fill="#fff"/>`,
+    `  <rect class="tile" x="${inset}" y="${inset}" width="${tile}" height="${tile}" rx="${Math.round(tile * 0.22)}" fill="#fff"/>`,
     ...mark(g, { box: tile, air, cx: 64, cy: 64 - lift, color: NAVY }).elements.map((el) => `  ${el}`),
     '</svg>',
     '',
@@ -243,6 +245,11 @@ const files = {
     color: '#fff',
     comment:
       'The name alone, for the promotional tiles that show the icon next to it, drawn by store/mark.mjs: "Shop Again?" in Poppins Bold and Medium, the text as paths.',
+  }),
+  'assets/name.svg': nameOnly({
+    color: 'currentColor',
+    comment:
+      'The name alone in the current color, for the extension\'s own pages, which inline it next to the icon, drawn by store/mark.mjs: "Shop Again?" in Poppins Bold and Medium, the text as paths.',
   }),
 };
 for (const [file, body] of Object.entries(files)) {

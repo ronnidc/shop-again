@@ -1,6 +1,6 @@
 import type { Standing } from '@/core/model';
 import { coversSomething } from './clear-spot';
-import { h } from './dom';
+import { h, svg } from './dom';
 import { icon } from './icons';
 
 // Runs inside other people's pages, so it stays free of extension APIs and
@@ -74,7 +74,7 @@ export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse,
       { class: 'bar', role: 'status' },
       // The sender comes first, as the mark the user knows from the toolbar
       // button, so the bar is never taken for the shop's own.
-      h('span', { class: 'sender' }, markElement(content.mark), content.brand),
+      h('span', { class: 'sender' }, svg(content.mark, { class: 'mark', 'aria-hidden': 'true' }), content.brand),
       icon(content.standing),
       h(
         'p',
@@ -145,14 +145,6 @@ export function mountBanner({ content, css, collapsed, tab: wantTab, onCollapse,
   document.documentElement.append(host);
   if (collapsed) placeTab();
   return host;
-}
-
-/** The mark is the extension's own file, parsed as a document and not as HTML in the shop's page. */
-function markElement(svg: string): Element {
-  const mark = new DOMParser().parseFromString(svg, 'image/svg+xml').documentElement;
-  mark.setAttribute('class', 'mark');
-  mark.setAttribute('aria-hidden', 'true');
-  return mark;
 }
 
 function applyStyles(shadow: ShadowRoot, css: string) {

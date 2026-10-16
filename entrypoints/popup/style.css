@@ -31,11 +31,18 @@ footer {
   font-weight: 600;
 }
 
-/* The icon carries its own white square, so it sits the same on light and dark. */
-.brand img {
+/* The icon with its white square, as the toolbar shows it. On light a border
+   draws the square, which would otherwise vanish into the page. */
+.brand .logo {
+  flex: none;
   inline-size: 20px;
   block-size: 20px;
-  border-radius: 5px;
+  overflow: visible;
+}
+
+.brand .tile {
+  stroke: var(--brand-edge);
+  stroke-width: 6;
 }
 
 footer .link {
