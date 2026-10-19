@@ -2,7 +2,7 @@
 
 A browser extension for Chrome, Edge and Firefox that remembers your own experiences with web shops. You note how an order went, good or bad, and the next time you open that shop a banner reminds you.
 
-Not published yet.
+Install it from the [Chrome Web Store](https://chromewebstore.google.com/detail/jimaphlhlmpgddfoeejkecgialdcbjpa) or [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/shop-again/fcemgomnfigfmmjfjeoikhlgknibhhlm). The Firefox version is in review at Mozilla.
 
 ## How it works
 
